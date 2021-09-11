@@ -1,0 +1,32 @@
+*{
+  box-sizing: border-box;
+}
+
+.row{
+  display: flex;
+}
+
+.row__vertical{
+  flex-direction: column;
+}
+
+.cell{
+  width: 30px;
+  height: 30px;
+  margin: 2px;
+  border: solid 1px #ccc;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid_wrapper{
+  display: grid; 
+  grid-template-columns: 0fr 1fr 0fr;
+  grid-template-rows: 0fr 1fr 0fr;
+}
+
+.application_wrapper{
+  display: flex;
+}
