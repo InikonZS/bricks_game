@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+body{
+  margin: 0px;
+  padding: 0px;
+}
+
 .row{
   display: flex;
 }
@@ -13,7 +18,7 @@
 .cell{
   width: 30px;
   height: 30px;
-  margin: 0px;
+  margin: 1px;
   
   display: flex;
   justify-content: center;
@@ -27,15 +32,19 @@
 }
 
 .cell__stack{
-  
+  border: solid 1px #222;
+  border-radius: 2px;
 }
 
 .grid_wrapper{
   display: grid; 
   grid-template-columns: 0fr 1fr 0fr;
-  grid-template-rows: 0fr 1fr 0fr;
+  grid-template-rows: 0fr 0fr 0fr;
 }
 
 .application_wrapper{
   display: flex;
+  justify-content: center;
+  height: 100vh;
+  align-items: center;
 }

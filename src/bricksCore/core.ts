@@ -50,8 +50,8 @@ export class Game{
 
 export class Field{
   public cells: Array<Cell> = [];
-  private width: number;
-  private height: number;
+  public width: number;
+  public height: number;
   public onReverted:(cell:Cell)=>void;
   private breakFigureLength: number
 
@@ -59,8 +59,8 @@ export class Field{
     this.breakFigureLength = breakFigureLength;
     this.width = width;
     this.height = height;
-    for (let i = 0; i< 1; i++){
-      let cell = new Cell(Math.floor(Math.random() * colors), 0, {x: Math.floor(Math.random() * width), y:Math.floor(Math.random() * height)});
+    for (let i = 0; i< 10; i++){
+      let cell = new Cell(Math.floor(Math.random() * colors), 0, {y: Math.floor(Math.random() * width), x:Math.floor(Math.random() * height)});
       this.putCell(cell);
     }
   }
@@ -76,7 +76,7 @@ export class Field{
   }
 
   private isInsideField(nextPosition:IVector2){
-    return (nextPosition.x >=0 && nextPosition.y>=0 && nextPosition.x<this.width && nextPosition.y<this.height);
+    return (nextPosition.x >=0 && nextPosition.y>=0 && nextPosition.y<this.width && nextPosition.x<this.height);
   }
 
   public processStep(){
@@ -194,14 +194,14 @@ class StackList{
   }
 
   private getDirection(index: number, width:number, height:number){
-    if (index < width) { return 1; }
+    if (index < height) { return 1; }
     if (index < width + height) { return 2; }
     if (index < width * 2  + height) { return 3; }
     return 4;
   }
 
   public getInitial(index: number, width:number, height:number){
-    if (index < width) { return {x: Math.floor(index % width), y: 0} }
+    if (index < height) { return {x: Math.floor(index % width), y: 0} }
     if (index < width + height) { return {x: 0, y: Math.floor((index - width) % height)} }
     if (index < width * 2  + height) {return {x: width-1, y: Math.floor((index - width - height) % height)} }
     return {x: Math.floor(index % width), y: height - 1}

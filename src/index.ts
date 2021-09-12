@@ -17,7 +17,7 @@ class StackView extends Control{
 
     stackModel.cells.forEach((jt, j)=>{
       let cellView = new Control(this.node, 'div', 'cell cell__stack');
-      cellView.node.textContent = direction.toString();
+      //cellView.node.textContent = direction.toString();
       cellView.node.onclick = ()=>{
         onClick();
       }
@@ -42,6 +42,7 @@ class StackView extends Control{
       const cellIndex = ( direction == 2 || direction == 1 ) ? index : this.stackModel.cells.length - 1 - index
       const cellColor = this.stackModel.cells[cellIndex]
       cellView.node.style.backgroundColor = this.colors[cellColor];
+      //cellView.node.textContent =['', '\\/', '>', '<', '/\\'  , ][direction];
     });
   }
 }
@@ -56,10 +57,10 @@ class FieldView extends Control{
     this.fieldModel = fieldModel;
     this.colors = colors;
     this.cells = [];
-    for (let i = 0; i<10; i++){
+    for (let i = 0; i<fieldModel.width; i++){
       const rowView = new Control(this.node, 'div', 'row');
       const row: Array<Control> = [];
-      for (let j = 0; j< 10; j++){
+      for (let j = 0; j< fieldModel.height; j++){
         let cell = new Control(rowView.node, 'div', 'cell cell__field');  
         row.push(cell); 
       }
@@ -76,7 +77,7 @@ class FieldView extends Control{
     this.fieldModel.cells.forEach(cell=>{
       const cellView = this.cells[cell.position.y][cell.position.x];
       cellView.node.style.backgroundColor = this.colors[cell.color];
-      cellView.node.textContent = cell.direction.toString();
+      cellView.node.textContent = ['', '\\/', '>', '<', '/\\'  , ][cell.direction];
     }); 
   }
 }
@@ -159,8 +160,9 @@ class BricksView extends Control{
     game.processSteps({
       onStep:(next)=>{
         setTimeout(()=>{
-          document.querySelector('#app').innerHTML='';
-          new BricksView(document.querySelector('#app'), game);
+          //document.querySelector('#app').innerHTML='';
+          //new BricksView(document.querySelector('#app'), game);
+          this.update();
           timer = 100;
           next();
         }, timer);
@@ -179,7 +181,7 @@ class BricksView extends Control{
   }
 }
 
-const game = new Game(10, 10, 6, 3);
+const game = new Game(8, 8, 6, 3);
 
 new BricksView(document.querySelector('#app'), game);
 
