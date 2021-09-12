@@ -13,12 +13,21 @@
 .cell{
   width: 30px;
   height: 30px;
-  margin: 2px;
-  border: solid 1px #ccc;
-  border-radius: 5px;
+  margin: 0px;
+  
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: default;
+}
+
+.cell__field{
+  border: solid 1px #ccc;
+  border-radius: 0px;
+}
+
+.cell__stack{
+  
 }
 
 .grid_wrapper{
