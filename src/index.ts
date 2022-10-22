@@ -182,7 +182,7 @@ class BricksView extends Control{
   }
 }
 
-const game = new Game(4, 8, 2, 3);
+const game = new Game(5, 10, 2, 3);
 
 new BricksView(document.querySelector('#app'), game);
 

@@ -64,6 +64,10 @@ export class Field{
         y: Math.floor(Math.random() * width), 
         x: Math.floor(Math.random() * height)
       }
+      if (this.getIndex(position.x, position.y) != -1){
+        console.log('wrong position')
+        continue;
+      }
       let cell = new Cell(Math.floor(Math.random() * colors), 0, position);
       this.putCell(cell);
     }
@@ -98,14 +102,22 @@ export class Field{
         isChanged = true;
       }
     });
+    const forRemove: IVector2[][] = [];
     if (isChanged == false){
       this.cells.forEach(cell=>{
         let fig = this.checkFigure(cell.position, cell.color);
+        
         if (fig.length>=this.breakFigureLength){
-          this.removeFigure(fig);
+          //this.removeFigure(fig);
+          forRemove.push(fig);
+          //console.log(JSON.stringify(fig));
           isChanged = true;
         }
       });
+      console.log(forRemove);
+      forRemove.forEach(it=>{
+        this.removeFigure(it);
+      })
     }
     return isChanged;
   }
