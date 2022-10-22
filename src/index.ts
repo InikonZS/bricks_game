@@ -205,6 +205,10 @@ class BricksView extends Control{
       },
       onRemove:(figure:Array<IVector2>, color:number,combo:number)=>{
         console.log('combo '+combo);
+        if (combo>1){
+          const comoView = new ComboView(this.removeLayer.node, combo);
+          comoView.animate();
+        }
         figure.forEach(cell=>{
           const cellView = new RemoveView(this.removeLayer.node, cell, this.colors[color]);
           cellView.animate();
@@ -255,6 +259,34 @@ class RemoveView extends Control{
           cellView.node.remove();
           //this.fieldModel.forRemove = this.fieldModel.forRemove.filter(it=> it !== figure);
       }
+    }))
+  }
+}
+
+class ComboView extends Control{
+  constructor(parentNode:HTMLElement, combo: number){
+    super(parentNode, 'div', '', 'Combo: '+ combo);
+    this.node.style.left = '0';
+    this.node.style.top =  '0';
+    //this.node.style.backgroundColor = color;
+  }
+
+  animate(){
+    const cellView = this;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      
+      //cellView.node.classList.add('cell__animate');
+      //cellView.node.ontransitionend = ()=>{
+          /*cellView.node.ontransitionend = null;
+          cellView.node.classList.remove('cell__animate');
+          cellView.node.style.backgroundColor = '#fff';
+          cellView.node.textContent = '';*/
+          setTimeout(()=>{
+            cellView.node.remove();
+          }, 500);
+          
+          //this.fieldModel.forRemove = this.fieldModel.forRemove.filter(it=> it !== figure);
+      //}
     }))
   }
 }
