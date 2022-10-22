@@ -219,9 +219,9 @@ class StackList{
 
   public getInitial(index: number, width:number, height:number){
     if (index < height) { return {x: Math.floor(index % height), y: 0} }
-    if (index < width + height) { return {x: 0, y: Math.floor((index - width) % width)} }
+    if (index < width + height) { return {x: 0, y: Math.floor((index - height) % width)} }
     if (index < width * 2  + height) {return {x: height-1, y: Math.floor((index - width - height) % width)} }
-    return {x: Math.floor(index % height), y: width - 1}
+    return {x: Math.floor((index - width * 2  + height) % height), y: width - 1}
   }
 
   public findByCell(cell:Cell){
