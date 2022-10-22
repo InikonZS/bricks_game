@@ -5,6 +5,7 @@ import { IVector2 } from './IVector2';
 export class Game{
   public field: Field;
   public stackList: StackList;
+  combo: number = 0;
 
   constructor(width:number, height:number, colors:number, breakFigureLength:number){
     this.field = new Field(width, height, colors, breakFigureLength);
@@ -31,9 +32,10 @@ export class Game{
     throw new Error('Max iterations, break');
   }*/
 
-  public processSteps(handlers:{onStep:(next:()=>void)=>void, onFinish:()=>void, onRemove: (figure:Array<IVector2>, color: number)=>void}){
+  public processSteps(handlers:{onStep:(next:()=>void)=>void, onFinish:()=>void, onRemove: (figure:Array<IVector2>, color: number, combo:number)=>void}){
     this.field.onRemove = (fig, color)=>{
-      handlers.onRemove(fig, color);
+      this.combo +=1;
+      handlers.onRemove(fig, color, this.combo);
     }
     const processStep = ()=>{
       return this.field.processStep()
@@ -44,6 +46,8 @@ export class Game{
       });
     } else {
       handlers.onStep(()=>{
+        console.log('finish')
+        this.combo = 0;
         handlers.onFinish();
       });
       return;
@@ -109,6 +113,7 @@ export class Field{
           this.onReverted(cell);
         }
         isChanged = true;
+        //this.combo = 0;
       }
     });
     const forRemove: IVector2[][] = [];
@@ -122,9 +127,12 @@ export class Field{
         if (fig.length>=this.breakFigureLength){
           //this.removeFigure(fig);
           forRemove.push(fig);
+          //this.combo+=1;
           this.onRemove(fig, cell.color);
           //console.log(JSON.stringify(fig));
           isChanged = true;
+        } else {
+          //this.combo = 0;
         }
       });
       console.log(forRemove);

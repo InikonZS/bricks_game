@@ -203,7 +203,8 @@ class BricksView extends Control{
             this.locked = false;
           }
       },
-      onRemove:(figure:Array<IVector2>, color:number)=>{
+      onRemove:(figure:Array<IVector2>, color:number,combo:number)=>{
+        console.log('combo '+combo);
         figure.forEach(cell=>{
           const cellView = new RemoveView(this.removeLayer.node, cell, this.colors[color]);
           cellView.animate();
