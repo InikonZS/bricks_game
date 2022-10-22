@@ -1,3 +1,7 @@
+import {Cell} from './cell';
+import { StackList } from './stackList';
+import { IVector2 } from './IVector2';
+
 export class Game{
   public field: Field;
   public stackList: StackList;
@@ -27,7 +31,10 @@ export class Game{
     throw new Error('Max iterations, break');
   }*/
 
-  public processSteps(handlers:{onStep:(next:()=>void)=>void, onFinish:()=>void}){
+  public processSteps(handlers:{onStep:(next:()=>void)=>void, onFinish:()=>void, onRemove: (figure:Array<IVector2>, color: number)=>void}){
+    this.field.onRemove = (fig, color)=>{
+      handlers.onRemove(fig, color);
+    }
     const processStep = ()=>{
       return this.field.processStep()
     }
@@ -53,7 +60,9 @@ export class Field{
   public width: number;
   public height: number;
   public onReverted:(cell:Cell)=>void;
-  private breakFigureLength: number
+  public onRemove:(figure:Array<IVector2>, color: number)=>void;
+  private breakFigureLength: number;
+  //public forRemove: Array<Array<Cell>> = []
 
   constructor(width:number, height:number, colors:number, breakFigureLength:number){
     this.breakFigureLength = breakFigureLength;
@@ -105,11 +114,15 @@ export class Field{
     const forRemove: IVector2[][] = [];
     if (isChanged == false){
       this.cells.forEach(cell=>{
+        if (forRemove.find(figure=> figure.find(({x, y})=> cell.position.x == x && cell.position.y == y))){
+          return;
+        }
         let fig = this.checkFigure(cell.position, cell.color);
         
         if (fig.length>=this.breakFigureLength){
           //this.removeFigure(fig);
           forRemove.push(fig);
+          this.onRemove(fig, cell.color);
           //console.log(JSON.stringify(fig));
           isChanged = true;
         }
@@ -173,6 +186,7 @@ export class Field{
     });
 
     this.cells = this.cells.filter(it=>!deletedCells.includes(it));
+    //this.forRemove.push(deletedCells);
   }
 
   public isAvailableLine(direction: number, initialPosition: IVector2):boolean{
@@ -192,107 +206,4 @@ export class Field{
 
 }
 
-class StackList{
-  public stacks: Array<Stack>;
 
-  constructor (width:number, height:number, colors:number){
-    this.stacks = [];
-    for (let i = 0; i< (width + height) *2; i++){
-      const stack = new Stack(colors);
-      const direction = this.getDirection(i, width, height);
-      stack.direction = direction;
-      stack.initialPosition = this.getInitial(i, width, height);
-      console.log(direction, stack.initialPosition);
-      for (let j = 0; j<3;j++){
-        stack.push(Math.floor(Math.random()* colors));
-      }
-      this.stacks.push(stack);
-    }
-  }
-
-  private getDirection(index: number, width:number, height:number){
-    if (index < height) { return 1; }
-    if (index < width + height) { return 2; }
-    if (index < width * 2  + height) { return 3; }
-    return 4;
-  }
-
-  public getInitial(index: number, width:number, height:number){
-    if (index < height) { return {x: Math.floor(index % height), y: 0} }
-    if (index < width + height) { return {x: 0, y: Math.floor((index - height) % width)} }
-    if (index < width * 2  + height) {return {x: height-1, y: Math.floor((index - width - height) % width)} }
-    return {x: Math.floor((index - width * 2  + height) % height), y: width - 1}
-  }
-
-  public findByCell(cell:Cell){
-    return this.stacks.find(stack=>{
-      let dir = [0, 4, 3, 2, 1];
-      return stack.initialPosition.x == cell.position.x && stack.initialPosition.y == cell.position.y && stack.direction == dir[cell.direction];
-    });
-  }
-
- /* public getStack(index:number){
-    return this.stacks[index];
-  }*/
-
-}
-
-export class Stack{
-  public cells: Array<number> = [];
-  public direction: number;
-  public initialPosition: IVector2;
-
-  private colorsCount: number;
-  private stackLength: number = 3;
-
-  constructor(colorsCount: number){
-    this.colorsCount = colorsCount;
-  }
-
-  pop(){
-    const cell = this.cells.pop();
-    this.cells.unshift(Math.floor(Math.random() * this.colorsCount));
-    return cell;
-  }
-
-  push(color:number){
-    this.cells = this.cells.slice(this.cells.length + 1 - this.stackLength);
-    return this.cells.push(color); 
-  }
-}
-
-class Cell{
-  private _direction: number;
-  private _color: number;
-  public position: IVector2;
-
-  constructor (color:number, direction:number, position:IVector2){
-    this._color = color;
-    this._direction = direction;
-    this.position = position;
-  }
-
-  public setDirection(direction:number){
-     this._direction = direction;
-  }
-
-  public getNextPosition(){
-    const movements:Array<IVector2> = [{x:0, y:0}, {x:0, y:1},{x:1, y:0}, {x:-1, y:0}, {x:0, y:-1}];
-    const currentMovement = movements[this._direction];
-    return {x: this.position.x + currentMovement.x, y: this.position.y + currentMovement.y};
-  }
-
-  get color() {
-    return this._color;
-  }
-
-  get direction(){
-    return this._direction;
-  }
-
-}
-
-interface IVector2{
-  x: number;
-  y: number;
-}

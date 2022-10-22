@@ -1,4 +1,6 @@
-import { Game , Stack, Field} from './bricksCore/core';
+import { Game, Field} from './bricksCore/core';
+import { IVector2 } from './bricksCore/IVector2';
+import { Stack } from './bricksCore/stack';
 import Control from './control/control';
 import './index.css';
 
@@ -54,7 +56,7 @@ class FieldView extends Control{
   private cells: Array<Array<Control>>;
 
   constructor (parentNode:HTMLElement, colors:Array<string>, fieldModel:Field){
-    super(parentNode);
+    super(parentNode, 'div', '');
     this.fieldModel = fieldModel;
     this.colors = colors;
     this.cells = [];
@@ -80,6 +82,21 @@ class FieldView extends Control{
       cellView.node.style.backgroundColor = this.colors[cell.color];
       cellView.node.textContent = ['', '\\/', '>', '<', '/\\'  , ][cell.direction];
     }); 
+
+    /*this.fieldModel.forRemove.forEach(figure=>{
+      figure.forEach(cell=>{
+        const cellView = this.cells[cell.position.y][cell.position.x];
+        cellView.node.style.backgroundColor = this.colors[cell.color];
+        cellView.node.classList.add('cell__animate');
+        cellView.node.ontransitionend = ()=>{
+            cellView.node.ontransitionend = null;
+            cellView.node.classList.remove('cell__animate');
+            cellView.node.style.backgroundColor = '#fff';
+            cellView.node.textContent = '';
+            this.fieldModel.forRemove = this.fieldModel.forRemove.filter(it=> it !== figure);
+        }
+      })
+    });*/
   }
 }
 
@@ -87,14 +104,18 @@ class BricksView extends Control{
   private colors = ['#f99', '#9f9', '#99f', '#f4f', '#df0', '#f90'];
   private fieldView: FieldView;
   private stakes: Array<StackView>;
+  onFinish: any;
+  game: Game;
+  removeLayer: Control;
 
   constructor (parentNode: HTMLElement, game:Game){
     super(parentNode, 'div', 'grid_wrapper');
+    this.game = game;
 
     this.stakes = [];
     const gridZones:Array<Control> = [];
     for (let i =0; i< 9; i++){
-      gridZones.push(new Control(this.node, 'div', 'grid_zone'));
+      gridZones.push(new Control(this.node, 'div', 'grid_zone' + (i==4&&' gamefield')));
     }
 
     for (let direction = 1; direction<=4; direction++){
@@ -150,11 +171,12 @@ class BricksView extends Control{
     });*/
 
     this.fieldView = new FieldView(gridZones[4].node, this.colors, game.field);
-
+    this.removeLayer = new Control(gridZones[4].node, 'div', 'remove_layer');
     this.update();
   }
 
   private handleMove(stackIndex:number){
+    const game = this.game;
     game.move(stackIndex);
     //game.processMove();
     let timer = 0;
@@ -171,7 +193,15 @@ class BricksView extends Control{
       onFinish:()=>{
           if (game.field.cells.length == 0){
             console.log('win');
+            this.onFinish?.();
           }
+      },
+      onRemove:(figure:Array<IVector2>, color:number)=>{
+        figure.forEach(cell=>{
+          const cellView = new RemoveView(this.removeLayer.node, cell, this.colors[color]);
+          cellView.animate();
+          
+        })
       }
     });
   }
@@ -180,11 +210,48 @@ class BricksView extends Control{
     this.stakes.forEach(stake=>stake.update());
     this.fieldView.update();
   }
+
+  destroy(){
+    this.node.remove();
+  }
 }
 
-const game = new Game(6, 10, 2, 3);
+function startGame(){
+  const game = new Game(6, 10, 2, 3);
+  const view = new BricksView(document.querySelector('#app'), game);
+  (window as any).app = game;
+  view.onFinish = ()=>{
+    view.destroy();
+    startGame()
+  }
+}
 
-new BricksView(document.querySelector('#app'), game);
+class RemoveView extends Control{
+  constructor(parentNode:HTMLElement, position:IVector2, color:string){
+    super(parentNode, 'div', 'cell remove_cell');
+    this.node.style.left = position.x * 32 +'px';
+    this.node.style.top = position.y * 32 +'px';
+    this.node.style.backgroundColor = color;
+  }
 
-(window as any).app = game;
+  animate(){
+    const cellView = this;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      
+      cellView.node.classList.add('cell__animate');
+      cellView.node.ontransitionend = ()=>{
+          cellView.node.ontransitionend = null;
+          cellView.node.classList.remove('cell__animate');
+          cellView.node.style.backgroundColor = '#fff';
+          cellView.node.textContent = '';
+          cellView.node.remove();
+          //this.fieldModel.forRemove = this.fieldModel.forRemove.filter(it=> it !== figure);
+      }
+    }))
+  }
+}
+
+startGame();
+
+
 console.log("App started");

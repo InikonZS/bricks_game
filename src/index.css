@@ -36,6 +36,11 @@ body{
   border-radius: 2px;
 }
 
+.cell__animate{
+  transition-duration: 400ms;
+  transform: scale(0);
+}
+
 .grid_wrapper{
   display: grid; 
   grid-template-columns: 0fr 1fr 0fr;
@@ -47,4 +52,19 @@ body{
   justify-content: center;
   height: 100vh;
   align-items: center;
+}
+
+.gamefield{
+  position: relative;
+}
+
+.remove_layer{
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.remove_cell{
+  position: absolute;
 }
