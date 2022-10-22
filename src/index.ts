@@ -107,6 +107,7 @@ class BricksView extends Control{
   onFinish: any;
   game: Game;
   removeLayer: Control;
+  locked: boolean;
 
   constructor (parentNode: HTMLElement, game:Game){
     super(parentNode, 'div', 'grid_wrapper');
@@ -176,6 +177,10 @@ class BricksView extends Control{
   }
 
   private handleMove(stackIndex:number){
+    if (this.locked){
+      return;
+    }
+    this.locked = true;
     const game = this.game;
     game.move(stackIndex);
     //game.processMove();
@@ -194,6 +199,8 @@ class BricksView extends Control{
           if (game.field.cells.length == 0){
             console.log('win');
             this.onFinish?.();
+          } else {
+            this.locked = false;
           }
       },
       onRemove:(figure:Array<IVector2>, color:number)=>{
