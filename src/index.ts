@@ -17,6 +17,7 @@ class StackView extends Control{
 
     stackModel.cells.forEach((jt, j)=>{
       let cellView = new Control(this.node, 'div', 'cell cell__stack');
+      cellView.node.textContent = stackModel.direction.toString();
       //cellView.node.textContent = direction.toString();
       cellView.node.onclick = ()=>{
         onClick();
@@ -181,7 +182,7 @@ class BricksView extends Control{
   }
 }
 
-const game = new Game(8, 8, 6, 3);
+const game = new Game(4, 8, 2, 3);
 
 new BricksView(document.querySelector('#app'), game);
 

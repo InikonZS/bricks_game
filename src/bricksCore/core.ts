@@ -60,7 +60,11 @@ export class Field{
     this.width = width;
     this.height = height;
     for (let i = 0; i< 10; i++){
-      let cell = new Cell(Math.floor(Math.random() * colors), 0, {y: Math.floor(Math.random() * width), x:Math.floor(Math.random() * height)});
+      const position = {
+        y: Math.floor(Math.random() * width), 
+        x: Math.floor(Math.random() * height)
+      }
+      let cell = new Cell(Math.floor(Math.random() * colors), 0, position);
       this.putCell(cell);
     }
   }
@@ -186,6 +190,7 @@ class StackList{
       const direction = this.getDirection(i, width, height);
       stack.direction = direction;
       stack.initialPosition = this.getInitial(i, width, height);
+      console.log(direction, stack.initialPosition);
       for (let j = 0; j<3;j++){
         stack.push(Math.floor(Math.random()* colors));
       }
@@ -201,10 +206,10 @@ class StackList{
   }
 
   public getInitial(index: number, width:number, height:number){
-    if (index < height) { return {x: Math.floor(index % width), y: 0} }
-    if (index < width + height) { return {x: 0, y: Math.floor((index - width) % height)} }
-    if (index < width * 2  + height) {return {x: width-1, y: Math.floor((index - width - height) % height)} }
-    return {x: Math.floor(index % width), y: height - 1}
+    if (index < height) { return {x: Math.floor(index % height), y: 0} }
+    if (index < width + height) { return {x: 0, y: Math.floor((index - width) % width)} }
+    if (index < width * 2  + height) {return {x: height-1, y: Math.floor((index - width - height) % width)} }
+    return {x: Math.floor(index % height), y: width - 1}
   }
 
   public findByCell(cell:Cell){
