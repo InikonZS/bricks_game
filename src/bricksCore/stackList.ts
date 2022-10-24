@@ -54,4 +54,9 @@ export class StackList {
         });
     }
 
+    save(){
+        return {
+            stacks: this.stacks.map(it=>it.save())
+        }
+    }
 }

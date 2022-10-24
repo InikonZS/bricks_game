@@ -28,5 +28,17 @@ export class Cell{
     get direction(){
       return this._direction;
     }
+
+    save(){
+        return {
+            direction: this.direction,
+            color: this.color,
+            position: this.position
+        }
+    }
+
+    static load(data:any){
+        return new Cell(data.color, data.direction, data.position);
+    }
   
   }

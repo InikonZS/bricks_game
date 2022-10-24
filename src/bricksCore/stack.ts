@@ -1,5 +1,11 @@
 import { IVector2 } from "./IVector2";
 
+interface IStackData{
+    cells: Array<number>;
+    direction: number;
+    position: IVector2;
+}
+
 export class Stack{
     public cells: Array<number> = [];
     public direction: number;
@@ -30,6 +36,18 @@ export class Stack{
     push(color:number){
       this.cells = this.cells.slice(this.cells.length + 1 - this.stackLength);
       return this.cells.push(color); 
+    }
+
+    save():IStackData{
+        return {
+            cells: this.cells,
+            direction: this.direction,
+            position: this.initialPosition
+        }
+    }
+
+    static load(data:IStackData){
+        
     }
   }
   

@@ -110,13 +110,22 @@ class BricksView extends Control{
   locked: boolean;
 
   constructor (parentNode: HTMLElement, game:Game){
-    super(parentNode, 'div', 'grid_wrapper');
+    super(parentNode);
+    const saveBtn = new Control(this.node, 'button', '', 'save');
+    saveBtn.node.onclick = ()=>{
+      const saveData = this.game.save();
+      console.log(saveData);
+      //@ts-ignore
+      window.saved = saveData
+    }
+    const wrapper = new Control(this.node, 'div', 'grid_wrapper')
     this.game = game;
-
+    
+    
     this.stakes = [];
     const gridZones:Array<Control> = [];
     for (let i =0; i< 9; i++){
-      gridZones.push(new Control(this.node, 'div', 'grid_zone' + (i==4&&' gamefield')));
+      gridZones.push(new Control(wrapper.node, 'div', 'grid_zone' + (i==4&&' gamefield')));
     }
 
     for (let direction = 1; direction<=4; direction++){
@@ -229,7 +238,7 @@ class BricksView extends Control{
 }
 
 function startGame(){
-  const game = new Game(6, 10, 2, 3);
+  const game = Game.generate(6, 10, 2, 3);
   const view = new BricksView(document.querySelector('#app'), game);
   (window as any).app = game;
   view.onFinish = ()=>{
@@ -292,6 +301,22 @@ class ComboView extends Control{
 }
 
 startGame();
+
+
+function loadGame(data:any){
+  const game = Game.load(data);
+  const view = new BricksView(document.querySelector('#app'), game);
+  (window as any).app = game;
+  view.onFinish = ()=>{
+    view.destroy();
+    startGame()
+  }
+}
+const loadBtn = new Control(document.body, 'button', '', 'load');
+loadBtn.node.onclick = ()=>{
+  //@ts-ignore
+  loadGame(window.saved);
+}
 
 
 console.log("App started");

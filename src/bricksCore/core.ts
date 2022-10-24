@@ -6,14 +6,29 @@ export class Game{
   public field: Field;
   public stackList: StackList;
   combo: number = 0;
+  width: number;
+  height: number;
+  colors: number;
 
   constructor(width:number, height:number, colors:number, breakFigureLength:number){
-    this.field = new Field(width, height, colors, breakFigureLength);
-    this.stackList = new StackList(width, height, colors);
-    this.field.onReverted = (cell:Cell)=>{
-      const st = this.stackList.findByCell(cell);
+    this.width = width;
+    this.height = height;
+    this.colors = colors;
+  }
+
+  static generate(width:number, height:number, colors:number, breakFigureLength:number){
+    const game = new Game(width, height, colors, breakFigureLength);
+    game.field = new Field(width, height, colors, breakFigureLength);
+    game.stackList = new StackList(width, height, colors);
+    game.width = width;
+    game.height = height;
+    game.colors = colors;
+    game.field.onReverted = (cell:Cell)=>{
+      const st = game.stackList.findByCell(cell);
       st.push(cell.color);
     }
+    game.field.generate();
+    return game;
   }
 
   public move(stackIndex:number){
@@ -57,6 +72,30 @@ export class Game{
   public checkFigure(point:IVector2){
     //console.log(this.field.checkFigure(point));
   }
+
+  save(){
+    return {
+      field: this.field.save(),
+      stacklist: this.stackList.save(),
+      width: this.width,
+      height: this.height,
+      colors: this.colors
+    }
+  }
+
+  static load(data:any){
+    const game = new Game(data.width, data.height, data.colors, 3);
+    game.field = Field.load(data.width, data.height, data.colors, data.field);
+    game.stackList = new StackList(data.width, data.height, data.colors);
+    game.width = data.width;
+    game.height = data.height;
+    game.colors = data.colors;
+    game.field.onReverted = (cell:Cell)=>{
+      const st = game.stackList.findByCell(cell);
+      st.push(cell.color);
+    }
+    return game;
+  }
 }
 
 export class Field{
@@ -66,22 +105,27 @@ export class Field{
   public onReverted:(cell:Cell)=>void;
   public onRemove:(figure:Array<IVector2>, color: number)=>void;
   private breakFigureLength: number;
+  colors: number;
   //public forRemove: Array<Array<Cell>> = []
 
   constructor(width:number, height:number, colors:number, breakFigureLength:number){
     this.breakFigureLength = breakFigureLength;
     this.width = width;
     this.height = height;
+    this.colors = colors;
+  }
+
+  generate(){
     for (let i = 0; i< 10; i++){
       const position = {
-        y: Math.floor(Math.random() * width), 
-        x: Math.floor(Math.random() * height)
+        y: Math.floor(Math.random() * this.width), 
+        x: Math.floor(Math.random() * this.height)
       }
       if (this.getIndex(position.x, position.y) != -1){
         console.log('wrong position')
         continue;
       }
-      let cell = new Cell(Math.floor(Math.random() * colors), 0, position);
+      let cell = new Cell(Math.floor(Math.random() * this.colors), 0, position);
       this.putCell(cell);
     }
   }
@@ -210,6 +254,22 @@ export class Field{
       }
     }
     return false;
+  }
+
+  save(){
+    return {
+      cells: this.cells.map(it=> it.save()),
+    }
+  }
+
+  loadCells(cellsData: Array<any>){
+    this.cells = cellsData.map(it=> Cell.load(it));
+  }
+
+  static load(width:number, height:number, colors:number, data:any){
+    const field = new Field(width, height, colors, 3);
+    field.loadCells(data.cells);
+    return field;
   }
 
 }
