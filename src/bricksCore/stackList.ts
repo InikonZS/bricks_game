@@ -59,4 +59,10 @@ export class StackList {
             stacks: this.stacks.map(it=>it.save())
         }
     }
+
+    static load(data:any){
+        const stackList = new StackList(1,1,1);
+        stackList.stacks = data.stacks.map((it:any)=> Stack.load(it));
+        return stackList;
+    }
 }

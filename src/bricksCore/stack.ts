@@ -47,7 +47,9 @@ export class Stack{
     }
 
     static load(data:IStackData){
-        
+        const stack = new Stack(2, data.direction, data.position);
+        stack.cells = data.cells;
+        return stack;
     }
   }
   

@@ -76,7 +76,7 @@ export class Game{
   save(){
     return {
       field: this.field.save(),
-      stacklist: this.stackList.save(),
+      stackList: this.stackList.save(),
       width: this.width,
       height: this.height,
       colors: this.colors
@@ -86,7 +86,7 @@ export class Game{
   static load(data:any){
     const game = new Game(data.width, data.height, data.colors, 3);
     game.field = Field.load(data.width, data.height, data.colors, data.field);
-    game.stackList = new StackList(data.width, data.height, data.colors);
+    game.stackList = StackList.load(data.stackList);//new StackList(data.width, data.height, data.colors);
     game.width = data.width;
     game.height = data.height;
     game.colors = data.colors;
