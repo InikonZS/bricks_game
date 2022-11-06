@@ -18,7 +18,8 @@ export class Game{
 
   static generate(width:number, height:number, colors:number, breakFigureLength:number){
     const game = new Game(width, height, colors, breakFigureLength);
-    game.field = new Field(width, height, colors, breakFigureLength);
+    const fieldData = Field.generate(width, height, colors, 15);
+    game.field = new Field(width, height, colors, breakFigureLength, fieldData);
     game.stackList = new StackList(width, height, colors);
     game.width = width;
     game.height = height;
@@ -27,7 +28,7 @@ export class Game{
       const st = game.stackList.findByCell(cell);
       st.push(cell.color);
     }
-    game.field.generate();
+    
     return game;
   }
 
@@ -85,7 +86,7 @@ export class Game{
 
   static load(data:any){
     const game = new Game(data.width, data.height, data.colors, 3);
-    game.field = Field.load(data.width, data.height, data.colors, data.field);
+    game.field = new Field(data.width, data.height, data.colors, 3, data.field.cells);
     game.stackList = StackList.load(data.stackList);//new StackList(data.width, data.height, data.colors);
     game.width = data.width;
     game.height = data.height;
@@ -98,6 +99,12 @@ export class Game{
   }
 }
 
+interface ICellData{
+  position: IVector2,
+  color: number,
+  direction: number
+}
+
 export class Field{
   public cells: Array<Cell> = [];
   public width: number;
@@ -108,26 +115,39 @@ export class Field{
   colors: number;
   //public forRemove: Array<Array<Cell>> = []
 
-  constructor(width:number, height:number, colors:number, breakFigureLength:number){
+  constructor(width:number, height:number, colors:number, breakFigureLength:number, cells:Array<ICellData>){
     this.breakFigureLength = breakFigureLength;
     this.width = width;
     this.height = height;
     this.colors = colors;
+    this.loadCells(cells);
   }
 
-  generate(){
-    for (let i = 0; i< 10; i++){
+  static generate(width:number, height:number, colors:number, count: number){
+    const result: Array<ICellData> = [];
+    const getIndex = (x:number, y:number)=>{
+      return result.findIndex(cell=>{
+        return cell.position.x == x && cell.position.y == y;
+      });
+    }
+    for (let i = 0; i< count; i++){
       const position = {
-        y: Math.floor(Math.random() * this.width), 
-        x: Math.floor(Math.random() * this.height)
+        y: Math.floor(Math.random() * width), 
+        x: Math.floor(Math.random() * height)
       }
-      if (this.getIndex(position.x, position.y) != -1){
+      if (getIndex(position.x, position.y) != -1){
         console.log('wrong position')
         continue;
       }
-      let cell = new Cell(Math.floor(Math.random() * this.colors), 0, position);
-      this.putCell(cell);
+      let cell: ICellData = {
+        color: Math.floor(Math.random() * colors), 
+        direction: 0, 
+        position
+      };
+      result.push(cell);
+      //this.putCell(cell);
     }
+    return result
   }
 
   public putCell(cell:Cell){
@@ -266,11 +286,11 @@ export class Field{
     this.cells = cellsData.map(it=> Cell.load(it));
   }
 
-  static load(width:number, height:number, colors:number, data:any){
+  /*static load(width:number, height:number, colors:number, data:any){
     const field = new Field(width, height, colors, 3);
     field.loadCells(data.cells);
     return field;
-  }
+  }*/
 
 }
 
