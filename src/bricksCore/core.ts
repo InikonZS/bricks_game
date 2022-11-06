@@ -2,6 +2,16 @@ import {Cell} from './cell';
 import { StackList } from './stackList';
 import { IVector2 } from './IVector2';
 
+export interface IGameData{
+  width: number,
+  height: number,
+  colors: number,
+  field: {
+    cells: Array<ICellData>
+  }
+  stackList: Array<Array<number>>
+}
+
 export class Game{
   public field: Field;
   public stackList: StackList;
@@ -10,14 +20,14 @@ export class Game{
   height: number;
   colors: number;
 
-  constructor(width:number, height:number, colors:number, breakFigureLength:number, data:any){
-    this.width = width;
-    this.height = height;
-    this.colors = colors;
+  constructor(breakFigureLength:number, data:IGameData){
+    this.width = data.width;
+    this.height = data.height;
+    this.colors = data.colors;
     const fieldData = data.field.cells;//Field.generate(width, height, colors, 15);
-    this.field = new Field(width, height, colors, breakFigureLength, fieldData);
+    this.field = new Field(data.width, data.height, data.colors, breakFigureLength, fieldData);
     const stackData = data.stackList;
-    this.stackList = new StackList(width, height, colors, stackData/*.generate(width, height, colors)*/);
+    this.stackList = new StackList(data.width, data.height, data.colors, stackData/*.generate(width, height, colors)*/);
     this.field.onReverted = (cell:Cell)=>{
       const st = this.stackList.findByCell(cell);
       st.push(cell.color);
@@ -26,6 +36,9 @@ export class Game{
 
   static generate(width: number, height:number, colors:number){
     return {
+      width: width,
+      height: height,
+      colors: colors,
       field: {cells: Field.generate(width, height, colors, 15)},
       stackList: StackList.generate(width, height, colors)
     }

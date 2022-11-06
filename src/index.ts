@@ -1,4 +1,4 @@
-import { Game, Field} from './bricksCore/core';
+import { Game, Field, IGameData} from './bricksCore/core';
 import { IVector2 } from './bricksCore/IVector2';
 import { Stack } from './bricksCore/stack';
 import Control from './control/control';
@@ -238,7 +238,7 @@ class BricksView extends Control{
 }
 
 function startGame(){
-  const game = new Game(6, 10, 2, 3, Game.generate(6, 10, 2));//Game.generate(6, 10, 2, 3);
+  const game = new Game(3, Game.generate(6, 10, 2));//Game.generate(6, 10, 2, 3);
   const view = new BricksView(document.querySelector('#app'), game);
   (window as any).app = game;
   view.onFinish = ()=>{
@@ -303,8 +303,8 @@ class ComboView extends Control{
 startGame();
 
 
-function loadGame(data:any){
-  const game = new Game(data.width, data.height, data.colors, 3, data)//Game.load(data);
+function loadGame(data:IGameData){
+  const game = new Game(3, data)//Game.load(data);
   const view = new BricksView(document.querySelector('#app'), game);
   (window as any).app = game;
   view.onFinish = ()=>{
