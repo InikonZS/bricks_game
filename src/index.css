@@ -5,6 +5,16 @@
 body{
   margin: 0px;
   padding: 0px;
+  --cellColor1: #f90;
+  --cellColor2: #9f0;
+  --cellColor3: #09f;
+  --cellColor4: #090;
+  --cellColor5: #90f;
+  --cellColor6: #f09;
+  --cellColorEmpty: #333333;
+  --cellSize: 30px;
+  background-color: #000;
+  color: #fff;
 }
 
 .row{
@@ -16,8 +26,8 @@ body{
 }
 
 .cell{
-  width: 30px;
-  height: 30px;
+  width: var(--cellSize);
+  height: var(--cellSize);
   margin: 1px;
   
   display: flex;
@@ -27,12 +37,12 @@ body{
 }
 
 .cell__field{
-  border: solid 1px #ccc;
+  border: solid 0px #ccc;
   border-radius: 0px;
 }
 
 .cell__stack{
-  border: solid 1px #222;
+  border: solid 0px #222;
   border-radius: 2px;
 }
 

@@ -19,7 +19,7 @@ class StackView extends Control{
 
     stackModel.cells.forEach((jt, j)=>{
       let cellView = new Control(this.node, 'div', 'cell cell__stack');
-      cellView.node.textContent = stackModel.direction.toString();
+      //cellView.node.textContent = stackModel.direction.toString();
       //cellView.node.textContent = direction.toString();
       cellView.node.onclick = ()=>{
         onClick();
@@ -44,7 +44,7 @@ class StackView extends Control{
       const direction = this.stackModel.direction
       const cellIndex = ( direction == 2 || direction == 1 ) ? index : this.stackModel.cells.length - 1 - index
       const cellColor = this.stackModel.cells[cellIndex]
-      cellView.node.style.backgroundColor = this.colors[cellColor];
+      cellView.node.style.backgroundColor = `var(--cellColor${cellColor + 1})`;//this.colors[cellColor];
       //cellView.node.textContent =['', '\\/', '>', '<', '/\\'  , ][direction];
     });
   }
@@ -73,13 +73,13 @@ class FieldView extends Control{
 
   public update(){
     this.cells.forEach(it=>it.forEach(cellView=>{
-      cellView.node.style.backgroundColor = '#fff';
+      cellView.node.style.backgroundColor = `var(--cellColorEmpty)`;
       cellView.node.textContent = '';
     }));
 
     this.fieldModel.cells.forEach(cell=>{
       const cellView = this.cells[cell.position.y][cell.position.x];
-      cellView.node.style.backgroundColor = this.colors[cell.color];
+      cellView.node.style.backgroundColor = `var(--cellColor${cell.color + 1})`//this.colors[cell.color];
       cellView.node.textContent = ['', '\\/', '>', '<', '/\\'  , ][cell.direction];
     }); 
 
@@ -250,8 +250,8 @@ function startGame(){
 class RemoveView extends Control{
   constructor(parentNode:HTMLElement, position:IVector2, color:string){
     super(parentNode, 'div', 'cell remove_cell');
-    this.node.style.left = position.x * 32 +'px';
-    this.node.style.top = position.y * 32 +'px';
+    this.node.style.left = `calc(${position.x} * (var(--cellSize) + 2px))`;
+    this.node.style.top = `calc(${position.y} * (var(--cellSize) + 2px))`;
     this.node.style.backgroundColor = color;
   }
 
@@ -263,7 +263,7 @@ class RemoveView extends Control{
       cellView.node.ontransitionend = ()=>{
           cellView.node.ontransitionend = null;
           cellView.node.classList.remove('cell__animate');
-          cellView.node.style.backgroundColor = '#fff';
+          cellView.node.style.backgroundColor = `var(--cellColorEmpty)`;
           cellView.node.textContent = '';
           cellView.node.remove();
           //this.fieldModel.forRemove = this.fieldModel.forRemove.filter(it=> it !== figure);
