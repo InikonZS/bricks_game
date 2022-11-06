@@ -238,7 +238,7 @@ class BricksView extends Control{
 }
 
 function startGame(){
-  const game = Game.generate(6, 10, 2, 3);
+  const game = new Game(6, 10, 2, 3, Game.generate(6, 10, 2));//Game.generate(6, 10, 2, 3);
   const view = new BricksView(document.querySelector('#app'), game);
   (window as any).app = game;
   view.onFinish = ()=>{
@@ -304,7 +304,7 @@ startGame();
 
 
 function loadGame(data:any){
-  const game = Game.load(data);
+  const game = new Game(data.width, data.height, data.colors, 3, data)//Game.load(data);
   const view = new BricksView(document.querySelector('#app'), game);
   (window as any).app = game;
   view.onFinish = ()=>{

@@ -4,15 +4,25 @@ import { Stack } from "./stack";
 export class StackList {
     public stacks: Array<Stack>;
 
-    constructor(width: number, height: number, colors: number) {
+    constructor(width: number, height: number, colors: number, data:Array<Array<number>>) {
         this.stacks = [];
         const stackCount = (width + height) * 2;
         for (let i = 0; i < stackCount; i++) {
             const direction = this.getDirection(i, width, height);
             const initialPosition = this.getInitial(i, width, height);
-            const stack = new Stack(colors, direction, initialPosition);
+            const stack = new Stack(colors, direction, initialPosition, data[i]);
+            //const stack = new Stack(colors, direction, initialPosition, Stack.generate(3, colors));
             this.stacks.push(stack);
         }
+    }
+
+    static generate(width: number, height: number, colors: number){
+        const result: Array<Array<number>> = []
+        const stackCount = (width + height) * 2;
+        for (let i = 0; i < stackCount; i++) {
+            result.push(Stack.generate(3, colors));
+        }
+        return result;
     }
 
     private getDirection(index: number, width: number, height: number) {
@@ -55,14 +65,12 @@ export class StackList {
     }
 
     save(){
-        return {
-            stacks: this.stacks.map(it=>it.save())
-        }
+        return this.stacks.map(it=>it.save())
     }
 
-    static load(data:any){
+    /*static load(data:any){
         const stackList = new StackList(1,1,1);
         stackList.stacks = data.stacks.map((it:any)=> Stack.load(it));
         return stackList;
-    }
+    }*/
 }

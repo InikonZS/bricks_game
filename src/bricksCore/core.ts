@@ -10,17 +10,32 @@ export class Game{
   height: number;
   colors: number;
 
-  constructor(width:number, height:number, colors:number, breakFigureLength:number){
+  constructor(width:number, height:number, colors:number, breakFigureLength:number, data:any){
     this.width = width;
     this.height = height;
     this.colors = colors;
+    const fieldData = data.field.cells;//Field.generate(width, height, colors, 15);
+    this.field = new Field(width, height, colors, breakFigureLength, fieldData);
+    const stackData = data.stackList;
+    this.stackList = new StackList(width, height, colors, stackData/*.generate(width, height, colors)*/);
+    this.field.onReverted = (cell:Cell)=>{
+      const st = this.stackList.findByCell(cell);
+      st.push(cell.color);
+    }
   }
 
-  static generate(width:number, height:number, colors:number, breakFigureLength:number){
+  static generate(width: number, height:number, colors:number){
+    return {
+      field: {cells: Field.generate(width, height, colors, 15)},
+      stackList: StackList.generate(width, height, colors)
+    }
+  }
+
+  /*static generate(width:number, height:number, colors:number, breakFigureLength:number){
     const game = new Game(width, height, colors, breakFigureLength);
     const fieldData = Field.generate(width, height, colors, 15);
     game.field = new Field(width, height, colors, breakFigureLength, fieldData);
-    game.stackList = new StackList(width, height, colors);
+    game.stackList = new StackList(width, height, colors, StackList.generate(width, height, colors));
     game.width = width;
     game.height = height;
     game.colors = colors;
@@ -30,7 +45,7 @@ export class Game{
     }
     
     return game;
-  }
+  }*/
 
   public move(stackIndex:number){
     const currentStack = this.stackList.stacks[stackIndex];
@@ -84,7 +99,7 @@ export class Game{
     }
   }
 
-  static load(data:any){
+  /*static load(data:any){
     const game = new Game(data.width, data.height, data.colors, 3);
     game.field = new Field(data.width, data.height, data.colors, 3, data.field.cells);
     game.stackList = StackList.load(data.stackList);//new StackList(data.width, data.height, data.colors);
@@ -96,7 +111,7 @@ export class Game{
       st.push(cell.color);
     }
     return game;
-  }
+  }*/
 }
 
 interface ICellData{
