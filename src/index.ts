@@ -293,8 +293,8 @@ function startGame(){
 class RemoveView extends Control{
   constructor(parentNode:HTMLElement, position:IVector2, color:number){
     super(parentNode, 'div', 'cell remove_cell');
-    this.node.style.left = `calc(${position.x} * (var(--cellSize) + 2px))`;
-    this.node.style.top = `calc(${position.y} * (var(--cellSize) + 2px))`;
+    this.node.style.left = `calc(${position.x} * (var(--cellSize) + 0px))`;
+    this.node.style.top = `calc(${position.y} * (var(--cellSize) + 0px))`;
     this.node.style.backgroundColor = `var(--cellColor${color + 1})`;
   }
 
