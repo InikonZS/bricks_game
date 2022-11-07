@@ -28,7 +28,7 @@ body{
 .cell{
   width: var(--cellSize);
   height: var(--cellSize);
-  margin: 1px;
+  margin: 0px;
   
   display: flex;
   justify-content: center;
@@ -37,13 +37,13 @@ body{
 }
 
 .cell__field{
-  border: solid 0px #ccc;
-  border-radius: 0px;
+  border: solid 1px #000;
+  border-radius: 3px;
 }
 
 .cell__stack{
-  border: solid 0px #222;
-  border-radius: 2px;
+  border: solid 1px #222;
+  border-radius: 3px;
 }
 
 .cell__animate{
@@ -55,6 +55,9 @@ body{
   display: grid; 
   grid-template-columns: 0fr 1fr 0fr;
   grid-template-rows: 0fr 0fr 0fr;
+  /*height: 100%;*/
+  /*width: 100%;*/
+  overflow: hidden;
 }
 
 .application_wrapper{
@@ -77,4 +80,59 @@ body{
 
 .remove_cell{
   position: absolute;
+}
+
+.sw_wrapper{
+  fill:#fff;
+  width: 50%;
+  
+  transform-origin: center;
+}
+
+.sw_wrapper0{
+  transform: scale(0);
+}
+
+.sw_wrapper1{
+  transform: rotate(270deg);
+}
+
+.sw_wrapper2{
+  transform: rotate(180deg);
+}
+
+.sw_wrapper3{
+  transform: rotate(0deg);
+}
+
+.sw_wrapper4{
+  transform: rotate(90deg);
+}
+
+.bricks_wrapper{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.bricks_wrapper_full{
+   width: 100%;
+}
+
+.bricks_wrapper_h{
+  height: 100%;
+}
+
+
+.header{
+  flex-shrink: 0;
+  height: 40px;
+}
+
+.flw{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }

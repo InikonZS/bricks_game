@@ -80,7 +80,12 @@ class FieldView extends Control{
     this.fieldModel.cells.forEach(cell=>{
       const cellView = this.cells[cell.position.y][cell.position.x];
       cellView.node.style.backgroundColor = `var(--cellColor${cell.color + 1})`//this.colors[cell.color];
-      cellView.node.textContent = ['', '\\/', '>', '<', '/\\'  , ][cell.direction];
+      cellView.node.innerHTML = `<svg class="sw_wrapper sw_wrapper${cell.direction}" version="1.0" xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="xMidYMid meet">
+       <path fill="#000" d="M50 100 L0 50 L45 5 L50 10 L10 50 L50 90 L45 95Z">
+     </svg>`
+     // cellView.node.textContent = ['', '\\/', '>', '<', '/\\'  , ][cell.direction];
     }); 
 
     /*this.fieldModel.forRemove.forEach(figure=>{
@@ -108,17 +113,23 @@ class BricksView extends Control{
   game: Game;
   removeLayer: Control;
   locked: boolean;
+  gridWrapper: Control;
+  flw: Control;
 
   constructor (parentNode: HTMLElement, game:Game){
-    super(parentNode);
-    const saveBtn = new Control(this.node, 'button', '', 'save');
+    super(parentNode, 'div', 'bricks_wrapper');
+    const header = new Control(this.node, 'div', 'header');
+    const saveBtn = new Control(header.node, 'button', '', 'save');
     saveBtn.node.onclick = ()=>{
       const saveData = this.game.save();
       console.log(saveData);
       //@ts-ignore
       window.saved = saveData
     }
-    const wrapper = new Control(this.node, 'div', 'grid_wrapper')
+    const flw = new Control(this.node, 'div', 'flw');
+    this.flw = flw;
+    const wrapper = new Control(flw.node, 'div', 'grid_wrapper')
+    this.gridWrapper = wrapper;
     this.game = game;
     
     
@@ -183,6 +194,38 @@ class BricksView extends Control{
     this.fieldView = new FieldView(gridZones[4].node, this.colors, game.field);
     this.removeLayer = new Control(gridZones[4].node, 'div', 'remove_layer');
     this.update();
+    this.resize();
+    requestAnimationFrame(()=> requestAnimationFrame(()=>{
+      this.resize();
+    }))
+    window.onresize = ()=>{
+      this.resize();
+      requestAnimationFrame(()=> requestAnimationFrame(()=>{
+        this.resize();
+      }))
+    }
+  }
+
+  resize(){
+    const parent = this.gridWrapper.node;
+    //const sizeW = (parent.clientWidth / (this.game.height + 6)) - 2;
+    //const sizeH = (this.flw.node.clientHeight / (this.game.width + 6)) - 2;
+    const sizeWF = (this.flw.node.clientWidth / (this.game.height + 6)) - 0;
+    const sizeHF = (this.flw.node.clientHeight / (this.game.width + 6)) - 0;
+    const size = Math.min(sizeHF, sizeWF);
+    //const aspectF = (this.game.height + 6) / (this.game.width + 6)
+    //const aspectR = this.flw.node.clientWidth / this.flw.node.clientHeight;
+    /*if (size != sizeHF && size !== sizeWF){
+      parent.classList.add('bricks_wrapper_full')
+    } else {
+      parent.classList.remove('bricks_wrapper_full')
+    }*/
+    /*if (aspectF <= aspectR){
+      parent.classList.add('bricks_wrapper_h')
+    } else {
+      parent.classList.remove('bricks_wrapper_h')
+    }*/
+    document.body.style.setProperty('--cellSize', size.toString()+'px');
   }
 
   private handleMove(stackIndex:number){
@@ -219,7 +262,7 @@ class BricksView extends Control{
           comoView.animate();
         }
         figure.forEach(cell=>{
-          const cellView = new RemoveView(this.removeLayer.node, cell, this.colors[color]);
+          const cellView = new RemoveView(this.removeLayer.node, cell, color);
           cellView.animate();
           
         })
@@ -238,7 +281,7 @@ class BricksView extends Control{
 }
 
 function startGame(){
-  const game = new Game(3, Game.generate(6, 10, 2));//Game.generate(6, 10, 2, 3);
+  const game = new Game(3, Game.generate(6, 10, 5));//Game.generate(6, 10, 2, 3);
   const view = new BricksView(document.querySelector('#app'), game);
   (window as any).app = game;
   view.onFinish = ()=>{
@@ -248,11 +291,11 @@ function startGame(){
 }
 
 class RemoveView extends Control{
-  constructor(parentNode:HTMLElement, position:IVector2, color:string){
+  constructor(parentNode:HTMLElement, position:IVector2, color:number){
     super(parentNode, 'div', 'cell remove_cell');
     this.node.style.left = `calc(${position.x} * (var(--cellSize) + 2px))`;
     this.node.style.top = `calc(${position.y} * (var(--cellSize) + 2px))`;
-    this.node.style.backgroundColor = color;
+    this.node.style.backgroundColor = `var(--cellColor${color + 1})`;
   }
 
   animate(){
@@ -312,11 +355,11 @@ function loadGame(data:IGameData){
     startGame()
   }
 }
-const loadBtn = new Control(document.body, 'button', '', 'load');
+/*const loadBtn = new Control(document.body, 'button', '', 'load');
 loadBtn.node.onclick = ()=>{
   //@ts-ignore
   loadGame(window.saved);
-}
+}*/
 
 
 console.log("App started");
