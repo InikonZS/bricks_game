@@ -281,13 +281,18 @@ class BricksView extends Control{
 }
 
 function startGame(){
-  const game = new Game(3, Game.generate(6, 10, 5));//Game.generate(6, 10, 2, 3);
-  const view = new BricksView(document.querySelector('#app'), game);
-  (window as any).app = game;
-  view.onFinish = ()=>{
-    view.destroy();
-    startGame()
+  const settingsView = new SettingsView(document.querySelector('#app'));
+  settingsView.onSubmit = (settings)=>{
+    //const game = new Game(3, Game.generate(6, 10, 5));//Game.generate(6, 10, 2, 3);
+    const game = new Game(3, Game.generate(settings.height, settings.width, settings.colors));//Game.generate(6, 10, 2, 3);
+    const view = new BricksView(document.querySelector('#app'), game);
+    (window as any).app = game;
+    view.onFinish = ()=>{
+      view.destroy();
+      startGame()
+    }
   }
+  
 }
 
 class RemoveView extends Control{
@@ -343,7 +348,6 @@ class ComboView extends Control{
   }
 }
 
-startGame();
 
 
 function loadGame(data:IGameData){
@@ -363,3 +367,44 @@ loadBtn.node.onclick = ()=>{
 
 
 console.log("App started");
+
+interface ISettings{
+  colors: number,
+  width: number,
+  height: number
+}
+class SettingsView extends Control{
+  onSubmit: (settings:ISettings)=>void;
+
+  constructor(parentNode:HTMLElement){
+    super(parentNode, 'div', '');
+
+    const colorsText = new Control(this.node, 'div', '', 'colors: ');
+    const colors = new Control<HTMLInputElement>(this.node, 'input', '');
+    colors.node.type = 'number';
+    colors.node.value = '5';
+
+    const sizeXText = new Control(this.node, 'div', '', 'sizeX: ');
+    const sizeX = new Control<HTMLInputElement>(this.node, 'input', '');
+    sizeX.node.type = 'number';
+    sizeX.node.value = '10';
+    
+
+    const sizeYText = new Control(this.node, 'div', '', 'sizeY: ');
+    const sizeY = new Control<HTMLInputElement>(this.node, 'input', '');
+    sizeY.node.type = 'number';
+    sizeY.node.value = '6';
+
+    const submit = new Control(this.node, 'button', '', 'New game');
+    submit.node.onclick = ()=>{
+      this.node.remove();
+      this.onSubmit?.({
+        colors: colors.node.valueAsNumber,
+        width: sizeX.node.valueAsNumber,
+        height: sizeY.node.valueAsNumber
+      })
+    }
+  }
+}
+
+startGame();

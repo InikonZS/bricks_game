@@ -11,6 +11,13 @@ body{
   --cellColor4: #090;
   --cellColor5: #90f;
   --cellColor6: #f09;
+
+  --cellColor7: #ff0;
+  --cellColor8: #0f0;
+  --cellColor9: #099;
+  --cellColor10: #900;
+  --cellColor11: #f00;
+  --cellColor12: #00f;
   --cellColorEmpty: #333333;
   --cellSize: 30px;
   background-color: #000;
