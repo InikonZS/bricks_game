@@ -119,15 +119,22 @@ class BricksView extends Control{
   constructor (parentNode: HTMLElement, game:Game){
     super(parentNode, 'div', 'bricks_wrapper');
     const header = new Control(this.node, 'div', 'header');
-    const saveBtn = new Control(header.node, 'button', '', 'save');
+    /*const saveBtn = new Control(header.node, 'button', 'header_button', 'save');
     saveBtn.node.onclick = ()=>{
       const saveData = this.game.save();
       console.log(saveData);
-      //@ts-ignore
-      window.saved = saveData
+      localStorage.setItem('saved', JSON.stringify(saveData));
+      //window.saved = saveData
     }
+
+    const exitBtn = new Control(header.node, 'button', 'header_button', 'exit');
+    exitBtn.node.onclick = ()=>{
+      this.onFinish();
+    }*/
+
     const flw = new Control(this.node, 'div', 'flw');
     this.flw = flw;
+
     const wrapper = new Control(flw.node, 'div', 'grid_wrapper')
     this.gridWrapper = wrapper;
     this.game = game;
@@ -137,6 +144,23 @@ class BricksView extends Control{
     const gridZones:Array<Control> = [];
     for (let i =0; i< 9; i++){
       gridZones.push(new Control(wrapper.node, 'div', 'grid_zone' + (i==4&&' gamefield')));
+    }
+
+    const menuBtn = new Control(gridZones[0].node, 'button', 'header_button', 'menu');
+    menuBtn.node.onclick = ()=>{
+      const overlay = new Control(this.node, 'div', 'overlay');
+      const menu = new PauseMenu(overlay.node);
+      menu.onSubmit = (result)=>{
+        if (result == 'save'){
+            const saveData = this.game.save();
+            console.log(saveData);
+            localStorage.setItem('saved', JSON.stringify(saveData));
+        } else if (result == 'menu'){
+           this.onFinish();
+        }
+        menu.destroy();
+        overlay.destroy();
+      }
     }
 
     for (let direction = 1; direction<=4; direction++){
@@ -281,17 +305,33 @@ class BricksView extends Control{
 }
 
 function startGame(){
-  const settingsView = new SettingsView(document.querySelector('#app'));
-  settingsView.onSubmit = (settings)=>{
-    //const game = new Game(3, Game.generate(6, 10, 5));//Game.generate(6, 10, 2, 3);
-    const game = new Game(3, Game.generate(settings.height, settings.width, settings.colors));//Game.generate(6, 10, 2, 3);
-    const view = new BricksView(document.querySelector('#app'), game);
-    (window as any).app = game;
-    view.onFinish = ()=>{
-      view.destroy();
-      startGame()
+  const root = document.querySelector<HTMLElement>('#app');
+  const mainMenu = new MainMenu(root);
+  mainMenu.onSubmit = (selected=>{
+    if (selected == 'load'){
+      const saved = localStorage.getItem('saved');
+      if (saved){
+        const parsed = JSON.parse(saved);
+        loadGame(parsed);
+        mainMenu.destroy();
+      }
+      //loadGame();
+    } else if (selected == 'custom'){
+      mainMenu.destroy();
+      const settingsView = new SettingsView(root);
+      settingsView.onSubmit = (settings)=>{
+        //const game = new Game(3, Game.generate(6, 10, 5));//Game.generate(6, 10, 2, 3);
+        const game = new Game(3, Game.generate(settings.height, settings.width, settings.colors));//Game.generate(6, 10, 2, 3);
+        const view = new BricksView(root, game);
+        (window as any).app = game;
+        view.onFinish = ()=>{
+          view.destroy();
+          startGame()
+        }
+      }
     }
-  }
+  })
+  
   
 }
 
@@ -377,25 +417,26 @@ class SettingsView extends Control{
   onSubmit: (settings:ISettings)=>void;
 
   constructor(parentNode:HTMLElement){
-    super(parentNode, 'div', '');
+    super(parentNode, 'div', 'settings_wrapper');
 
-    const colorsText = new Control(this.node, 'div', '', 'colors: ');
-    const colors = new Control<HTMLInputElement>(this.node, 'input', '');
+    const colorsText = new Control(this.node, 'div', 'option_text', 'colors: ');
+    const colors = new Control<HTMLInputElement>(this.node, 'input', 'option_input');
     colors.node.type = 'number';
     colors.node.value = '5';
 
-    const sizeXText = new Control(this.node, 'div', '', 'sizeX: ');
-    const sizeX = new Control<HTMLInputElement>(this.node, 'input', '');
+    const sizeXText = new Control(this.node, 'div', 'option_text', 'sizeX: ');
+    const sizeX = new Control<HTMLInputElement>(this.node, 'input', 'option_input');
     sizeX.node.type = 'number';
     sizeX.node.value = '10';
     
 
-    const sizeYText = new Control(this.node, 'div', '', 'sizeY: ');
-    const sizeY = new Control<HTMLInputElement>(this.node, 'input', '');
+    const sizeYText = new Control(this.node, 'div', 'option_text', 'sizeY: ');
+    const sizeY = new Control<HTMLInputElement>(this.node, 'input', 'option_input');
     sizeY.node.type = 'number';
     sizeY.node.value = '6';
 
-    const submit = new Control(this.node, 'button', '', 'New game');
+    const submitText = new Control(this.node, 'div', 'option_text', '');
+    const submit = new Control(this.node, 'button', 'option_input option_button', 'New game');
     submit.node.onclick = ()=>{
       this.node.remove();
       this.onSubmit?.({
@@ -403,6 +444,51 @@ class SettingsView extends Control{
         width: sizeX.node.valueAsNumber,
         height: sizeY.node.valueAsNumber
       })
+    }
+  }
+}
+
+class MainMenu extends Control{
+  onSubmit: (selected:string)=>void;
+
+  constructor(parentNode:HTMLElement){
+    super(parentNode, 'div', 'settings_wrapper');
+    const customGame = new Control(this.node, 'button', 'option_input option_button', 'custom game');
+    customGame.node.onclick = ()=>{
+      this.onSubmit('custom');
+    }
+
+    const loadGame = new Control(this.node, 'button', 'option_input option_button', 'load game');
+    loadGame.node.onclick = ()=>{
+      this.onSubmit('load');
+    }
+  }
+}
+
+class PauseMenu extends Control{
+  onSubmit: (selected:'continue' | 'restart' | 'save' | 'menu')=>void;
+
+  constructor(parentNode:HTMLElement){
+    super(parentNode, 'div', 'settings_wrapper');
+    const continueButton = new Control(this.node, 'button', 'option_input option_button', 'continue');
+    continueButton.node.onclick = ()=>{
+      this.onSubmit('continue');
+    }
+
+    const restart = new Control(this.node, 'button', 'option_input option_button', 'restart');
+    restart.node.onclick = ()=>{
+      this.onSubmit('restart');
+    }
+
+
+    const saveGame = new Control(this.node, 'button', 'option_input option_button', 'save game');
+    saveGame.node.onclick = ()=>{
+      this.onSubmit('save');
+    }
+
+    const mainMenu = new Control(this.node, 'button', 'option_input option_button', 'main menu');
+    mainMenu.node.onclick = ()=>{
+      this.onSubmit('menu');
     }
   }
 }

@@ -10,6 +10,10 @@ class Control<T extends HTMLElement = HTMLElement> {
     }
     this.node = el as T;
   }
+
+  destroy(){
+    this.node.remove();
+  }
 }
 
 export default Control;
