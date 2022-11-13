@@ -109,7 +109,7 @@ class BricksView extends Control{
   private colors = ['#f99', '#9f9', '#99f', '#f4f', '#df0', '#f90'];
   private fieldView: FieldView;
   private stakes: Array<StackView>;
-  onFinish: any;
+  onFinish:  (result: string)=> void;
   game: Game;
   removeLayer: Control;
   locked: boolean;
@@ -156,7 +156,9 @@ class BricksView extends Control{
             console.log(saveData);
             localStorage.setItem('saved', JSON.stringify(saveData));
         } else if (result == 'menu'){
-           this.onFinish();
+           this.onFinish('mainMenu');
+        } else if (result == 'restart'){
+          this.onFinish('restart');
         }
         menu.destroy();
         overlay.destroy();
@@ -274,7 +276,7 @@ class BricksView extends Control{
       onFinish:()=>{
           if (game.field.cells.length == 0){
             console.log('win');
-            this.onFinish?.();
+            this.onFinish?.('completed');
           } else {
             this.locked = false;
           }
@@ -321,13 +323,28 @@ function startGame(){
       const settingsView = new SettingsView(root);
       settingsView.onSubmit = (settings)=>{
         //const game = new Game(3, Game.generate(6, 10, 5));//Game.generate(6, 10, 2, 3);
-        const game = new Game(3, Game.generate(settings.height, settings.width, settings.colors));//Game.generate(6, 10, 2, 3);
-        const view = new BricksView(root, game);
-        (window as any).app = game;
-        view.onFinish = ()=>{
-          view.destroy();
-          startGame()
+        const generated = Game.generate(settings.height, settings.width, settings.colors);
+        const startWithGenerated = ()=>{
+          const game = new Game(3, generated);//Game.generate(6, 10, 2, 3);
+          const view = new BricksView(root, game);
+
+          (window as any).app = game;
+          view.onFinish = (result)=>{
+            if (result == 'mainMenu'){
+              view.destroy();
+              startGame()
+            } else if (result == 'restart'){
+              view.destroy();
+              startWithGenerated()
+            } else if (result == 'completed'){
+              view.destroy();
+              startGame()
+            }
+            
+          }
         }
+        startWithGenerated();
+        
       }
     }
   })
