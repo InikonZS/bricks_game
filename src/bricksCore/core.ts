@@ -34,12 +34,22 @@ export class Game{
     }
   }
 
-  static generate(width: number, height:number, colors:number, count:number){
+  static generateRandom(width: number, height:number, colors:number, count:number){
     return {
       width: width,
       height: height,
       colors: colors,
-      field: {cells: Field.generate(width, height, colors, count)},
+      field: {cells: Field.generateRandom(width, height, colors, count)},
+      stackList: StackList.generate(width, height, colors)
+    }
+  }
+
+  static generateByTemplate(width: number, height:number, colors:number, template:Array<Array<number>>){
+    return {
+      width: width,
+      height: height,
+      colors: colors,
+      field: {cells: Field.generateByTemplate(width, height, colors, template)},
       stackList: StackList.generate(width, height, colors)
     }
   }
@@ -151,7 +161,44 @@ export class Field{
     this.loadCells(cells);
   }
 
-  static generate(width:number, height:number, colors:number, count: number){
+  static generateByTemplate(width:number, height:number, colors:number, template:Array<Array<number>>){
+    /*const template = [
+      [0, 1, 1, 1, 1, 0],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [0, 1, 1, 1, 1, 0],
+    ];
+    const template2 = [
+      [0, 1, 1, 1, 0],
+      [1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1],
+      [0, 1, 1, 1, 0],
+    ];*/
+    const centerPoint = {x: Math.floor((width - template[0].length) / 2), y: Math.floor((height - template.length) / 2)};
+    const result: Array<ICellData> = [];
+    template.forEach((row, y)=>{
+      row.forEach((cell, x)=>{
+        if (cell == 0) return;
+        const position = {
+          y: y + centerPoint.y, 
+          x: x + centerPoint.x
+        }
+        let cellData: ICellData = {
+          color: Math.floor(Math.random() * colors), 
+          direction: 0, 
+          position
+        };
+        result.push(cellData);
+      })
+    })
+    
+    return result
+  }
+
+  static generateRandom(width:number, height:number, colors:number, count: number){
     const result: Array<ICellData> = [];
     const getIndex = (x:number, y:number)=>{
       return result.findIndex(cell=>{

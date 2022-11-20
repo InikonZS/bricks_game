@@ -4,6 +4,35 @@ import { Stack } from './bricksCore/stack';
 import Control from './control/control';
 import './index.css';
 
+const template = [
+      [0, 1, 1, 1, 1, 0],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [0, 1, 1, 1, 1, 0],
+    ];
+const template2 = [
+  [0, 1, 1, 1, 0],
+  [1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1],
+  [0, 1, 1, 1, 0],
+];
+
+const template3 = [
+  [0, 1, 1, 0],
+  [1, 1, 1, 1],
+  [1, 1, 1, 1],
+  [0, 1, 1, 0],
+];
+
+const template4 = [
+  [0, 1, 0],
+  [1, 0, 1],
+  [0, 1, 0],
+];
+
 class StackView extends Control{
   private stackModel:Stack;
   private cellViews: Array<Control>;
@@ -311,13 +340,13 @@ class BricksView extends Control{
 }
 
 const levelGenerators = [
-  ()=>Game.generate(6, 6, 2, 1),
-  ()=>Game.generate(7, 7, 3, 4),
-  ()=>Game.generate(8, 8, 4, 7),
-  ()=>Game.generate(10, 10, 5, 12),
-  ()=>Game.generate(10, 10, 6, 15),
-  ()=>Game.generate(10, 10, 7, 15),
-  ()=>Game.generate(12, 12, 8, 15),
+  ()=>Game.generateByTemplate(6, 6, 2, [[1,1],[1,1]]),
+  ()=>Game.generateByTemplate(7, 7, 3, template4),
+  ()=>Game.generateByTemplate(8, 8, 4, template3),
+  ()=>Game.generateByTemplate(10, 10, 5, template3),
+  ()=>Game.generateByTemplate(11, 11, 6, template2),
+  ()=>Game.generateByTemplate(11, 11, 7, template2),
+  ()=>Game.generateByTemplate(12, 12, 8, template),
 ]
 
 function startGame(){
@@ -337,7 +366,7 @@ function startGame(){
       const settingsView = new SettingsView(root);
       settingsView.onSubmit = (settings)=>{
         //const game = new Game(3, Game.generate(6, 10, 5));//Game.generate(6, 10, 2, 3);
-        const generated = Game.generate(settings.height, settings.width, settings.colors, 15);
+        const generated = Game.generateRandom(settings.height, settings.width, settings.colors, 15);
         const startWithGenerated = ()=>{
           const game = new Game(3, generated);//Game.generate(6, 10, 2, 3);
           const view = new BricksView(root, game);
