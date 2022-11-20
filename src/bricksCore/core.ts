@@ -34,12 +34,12 @@ export class Game{
     }
   }
 
-  static generate(width: number, height:number, colors:number){
+  static generate(width: number, height:number, colors:number, count:number){
     return {
       width: width,
       height: height,
       colors: colors,
-      field: {cells: Field.generate(width, height, colors, 15)},
+      field: {cells: Field.generate(width, height, colors, count)},
       stackList: StackList.generate(width, height, colors)
     }
   }

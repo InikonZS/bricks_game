@@ -323,7 +323,7 @@ function startGame(){
       const settingsView = new SettingsView(root);
       settingsView.onSubmit = (settings)=>{
         //const game = new Game(3, Game.generate(6, 10, 5));//Game.generate(6, 10, 2, 3);
-        const generated = Game.generate(settings.height, settings.width, settings.colors);
+        const generated = Game.generate(settings.height, settings.width, settings.colors, 15);
         const startWithGenerated = ()=>{
           const game = new Game(3, generated);//Game.generate(6, 10, 2, 3);
           const view = new BricksView(root, game);
@@ -479,6 +479,24 @@ class MainMenu extends Control{
     loadGame.node.onclick = ()=>{
       this.onSubmit('load');
     }
+
+    const levelGenerators = [
+      ()=>Game.generate(6, 6, 2, 1),
+      ()=>Game.generate(7, 7, 3, 4),
+      ()=>Game.generate(8, 8, 4, 7),
+      ()=>Game.generate(10, 10, 5, 12),
+      ()=>Game.generate(10, 10, 6, 15),
+      ()=>Game.generate(10, 10, 7, 15),
+      ()=>Game.generate(12, 12, 8, 15),
+    ]
+
+    const levelContainer = new Control(this.node, 'div', 'level_container');
+    levelGenerators.forEach((levelGenerator, index)=>{
+      const levelButton = new Control(levelContainer.node, 'button', 'level_button', index.toString());
+      levelButton.node.onclick = ()=>{
+
+      }
+    })
   }
 }
 
