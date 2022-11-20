@@ -198,3 +198,13 @@ body{
   transform: translate(-50%, -50%) scale(1);
   transition-duration: 400ms;
 }
+
+.level_container{
+  display: flex;
+}
+
+.level_button{
+  height: 40px;
+  background-color: #09f;
+  width: 100%;
+}
