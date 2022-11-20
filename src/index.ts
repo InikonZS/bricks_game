@@ -115,10 +115,12 @@ class BricksView extends Control{
   locked: boolean;
   gridWrapper: Control;
   flw: Control;
+  header: Control<HTMLElement>;
 
   constructor (parentNode: HTMLElement, game:Game){
     super(parentNode, 'div', 'bricks_wrapper');
     const header = new Control(this.node, 'div', 'header');
+    this.header = header;
     /*const saveBtn = new Control(header.node, 'button', 'header_button', 'save');
     saveBtn.node.onclick = ()=>{
       const saveData = this.game.save();
@@ -233,11 +235,13 @@ class BricksView extends Control{
   }
 
   resize(){
+    const h = this.node.clientHeight - this.header.node.clientHeight
+      //this.flw.node.style.height = this.node.clientHeight - this.header.node.clientHeight;
     const parent = this.gridWrapper.node;
     //const sizeW = (parent.clientWidth / (this.game.height + 6)) - 2;
     //const sizeH = (this.flw.node.clientHeight / (this.game.width + 6)) - 2;
     const sizeWF = (this.flw.node.clientWidth / (this.game.height + 6)) - 0;
-    const sizeHF = (this.flw.node.clientHeight / (this.game.width + 6)) - 0;
+    const sizeHF = (Math.min(this.flw.node.clientHeight, h) / (this.game.width + 6)) - 0;
     const size = Math.min(sizeHF, sizeWF);
     //const aspectF = (this.game.height + 6) / (this.game.width + 6)
     //const aspectR = this.flw.node.clientWidth / this.flw.node.clientHeight;
@@ -306,10 +310,20 @@ class BricksView extends Control{
   }
 }
 
+const levelGenerators = [
+  ()=>Game.generate(6, 6, 2, 1),
+  ()=>Game.generate(7, 7, 3, 4),
+  ()=>Game.generate(8, 8, 4, 7),
+  ()=>Game.generate(10, 10, 5, 12),
+  ()=>Game.generate(10, 10, 6, 15),
+  ()=>Game.generate(10, 10, 7, 15),
+  ()=>Game.generate(12, 12, 8, 15),
+]
+
 function startGame(){
   const root = document.querySelector<HTMLElement>('#app');
   const mainMenu = new MainMenu(root);
-  mainMenu.onSubmit = (selected=>{
+  mainMenu.onSubmit = ((selected, data)=>{
     if (selected == 'load'){
       const saved = localStorage.getItem('saved');
       if (saved){
@@ -346,6 +360,33 @@ function startGame(){
         startWithGenerated();
         
       }
+    } else if (selected == 'level'){
+      const li:number = data;
+      mainMenu.destroy();
+        //const game = new Game(3, Game.generate(6, 10, 5));//Game.generate(6, 10, 2, 3);
+        const generated = levelGenerators[li]();//Game.generate(settings.height, settings.width, settings.colors, 15);
+        const startWithGenerated = ()=>{
+          const game = new Game(3, generated);//Game.generate(6, 10, 2, 3);
+          const view = new BricksView(root, game);
+
+          (window as any).app = game;
+          view.onFinish = (result)=>{
+            if (result == 'mainMenu'){
+              view.destroy();
+              startGame()
+            } else if (result == 'restart'){
+              view.destroy();
+              startWithGenerated()
+            } else if (result == 'completed'){
+              view.destroy();
+              startGame()
+            }
+            
+          }
+        }
+        startWithGenerated();
+        
+      
     }
   })
   
@@ -379,9 +420,10 @@ class RemoveView extends Control{
 
 class ComboView extends Control{
   constructor(parentNode:HTMLElement, combo: number){
-    super(parentNode, 'div', '', 'Combo: '+ combo);
-    this.node.style.left = '0';
-    this.node.style.top =  '0';
+    super(parentNode, 'div', 'combo_view', 'Combo: '+ combo);
+    //this.node.style.left = '0';
+    //.node.style.top =  '0';
+    //this.node.style.fontSize = ``;
     //this.node.style.backgroundColor = color;
   }
 
@@ -466,35 +508,25 @@ class SettingsView extends Control{
 }
 
 class MainMenu extends Control{
-  onSubmit: (selected:string)=>void;
+  onSubmit: (selected:string, data:any)=>void;
 
   constructor(parentNode:HTMLElement){
     super(parentNode, 'div', 'settings_wrapper');
     const customGame = new Control(this.node, 'button', 'option_input option_button', 'custom game');
     customGame.node.onclick = ()=>{
-      this.onSubmit('custom');
+      this.onSubmit('custom', null);
     }
 
     const loadGame = new Control(this.node, 'button', 'option_input option_button', 'load game');
     loadGame.node.onclick = ()=>{
-      this.onSubmit('load');
+      this.onSubmit('load', null);
     }
-
-    const levelGenerators = [
-      ()=>Game.generate(6, 6, 2, 1),
-      ()=>Game.generate(7, 7, 3, 4),
-      ()=>Game.generate(8, 8, 4, 7),
-      ()=>Game.generate(10, 10, 5, 12),
-      ()=>Game.generate(10, 10, 6, 15),
-      ()=>Game.generate(10, 10, 7, 15),
-      ()=>Game.generate(12, 12, 8, 15),
-    ]
 
     const levelContainer = new Control(this.node, 'div', 'level_container');
     levelGenerators.forEach((levelGenerator, index)=>{
       const levelButton = new Control(levelContainer.node, 'button', 'level_button', index.toString());
       levelButton.node.onclick = ()=>{
-
+        this.onSubmit('level', index)
       }
     })
   }
