@@ -5,6 +5,23 @@
 body{
   margin: 0px;
   padding: 0px;
+  --cellColor1: #f90;
+  --cellColor2: #9f0;
+  --cellColor3: #09f;
+  --cellColor4: #090;
+  --cellColor5: #90f;
+  --cellColor6: #f09;
+
+  --cellColor7: #ff0;
+  --cellColor8: #0f0;
+  --cellColor9: #099;
+  --cellColor10: #900;
+  --cellColor11: #f00;
+  --cellColor12: #00f;
+  --cellColorEmpty: #333333;
+  --cellSize: 30px;
+  background-color: #000;
+  color: #fff;
 }
 
 .row{
@@ -16,9 +33,9 @@ body{
 }
 
 .cell{
-  width: 30px;
-  height: 30px;
-  margin: 1px;
+  width: var(--cellSize);
+  height: var(--cellSize);
+  margin: 0px;
   
   display: flex;
   justify-content: center;
@@ -27,19 +44,27 @@ body{
 }
 
 .cell__field{
-  border: solid 1px #ccc;
-  border-radius: 0px;
+  border: solid 1px #000;
+  border-radius: 3px;
 }
 
 .cell__stack{
   border: solid 1px #222;
-  border-radius: 2px;
+  border-radius: 3px;
+}
+
+.cell__animate{
+  transition-duration: 400ms;
+  transform: scale(0);
 }
 
 .grid_wrapper{
   display: grid; 
   grid-template-columns: 0fr 1fr 0fr;
   grid-template-rows: 0fr 0fr 0fr;
+  /*height: 100%;*/
+  /*width: 100%;*/
+  overflow: hidden;
 }
 
 .application_wrapper{
@@ -47,4 +72,139 @@ body{
   justify-content: center;
   height: 100vh;
   align-items: center;
+}
+
+.gamefield{
+  position: relative;
+}
+
+.remove_layer{
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+}
+
+.remove_cell{
+  position: absolute;
+}
+
+.sw_wrapper{
+  fill:#fff;
+  width: 50%;
+  
+  transform-origin: center;
+}
+
+.sw_wrapper0{
+  transform: scale(0);
+}
+
+.sw_wrapper1{
+  transform: rotate(270deg);
+}
+
+.sw_wrapper2{
+  transform: rotate(180deg);
+}
+
+.sw_wrapper3{
+  transform: rotate(0deg);
+}
+
+.sw_wrapper4{
+  transform: rotate(90deg);
+}
+
+.bricks_wrapper{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.bricks_wrapper_full{
+   width: 100%;
+}
+
+.bricks_wrapper_h{
+  height: 100%;
+}
+
+
+.header{
+  flex-shrink: 0;
+  height: 40px;
+}
+
+.flw{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.settings_wrapper{
+  width: 100%;
+  max-width: 400px;
+}
+
+.option_text{
+  width: 100%;
+  font-size: 20px;
+}
+
+.option_input{
+  width: 100%;
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+.option_button{
+  height: 40px;
+  background-color: #09f;
+}
+
+.header_button{
+  background-color: #000;
+  color: #fff;
+  width: 100%;
+  height: 100%;
+}
+
+.header_button:hover{
+  background-color: #09f4;
+}
+
+.overlay{
+  position: fixed;
+  background-color: #000c;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.combo_view{
+  left: 50%;
+  position: absolute;
+  font-size: calc(var(--cellSize) / 2);
+  top: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  transition-duration: 400ms;
+}
+
+.level_container{
+  display: flex;
+}
+
+.level_button{
+  height: 40px;
+  background-color: #09f;
+  width: 100%;
 }

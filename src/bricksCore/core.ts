@@ -1,15 +1,74 @@
+import {Cell} from './cell';
+import { StackList } from './stackList';
+import { IVector2 } from './IVector2';
+
+export interface IGameData{
+  width: number,
+  height: number,
+  colors: number,
+  field: {
+    cells: Array<ICellData>
+  }
+  stackList: Array<Array<number>>
+}
+
 export class Game{
   public field: Field;
   public stackList: StackList;
+  combo: number = 0;
+  width: number;
+  height: number;
+  colors: number;
 
-  constructor(width:number, height:number, colors:number, breakFigureLength:number){
-    this.field = new Field(width, height, colors, breakFigureLength);
-    this.stackList = new StackList(width, height, colors);
+  constructor(breakFigureLength:number, data:IGameData){
+    this.width = data.width;
+    this.height = data.height;
+    this.colors = data.colors;
+    const fieldData = data.field.cells;//Field.generate(width, height, colors, 15);
+    this.field = new Field(data.width, data.height, data.colors, breakFigureLength, fieldData);
+    const stackData = data.stackList;
+    this.stackList = new StackList(data.width, data.height, data.colors, stackData/*.generate(width, height, colors)*/);
     this.field.onReverted = (cell:Cell)=>{
       const st = this.stackList.findByCell(cell);
       st.push(cell.color);
     }
   }
+
+  static generateRandom(width: number, height:number, colors:number, count:number){
+    return {
+      width: width,
+      height: height,
+      colors: colors,
+      field: {cells: Field.generateRandom(width, height, colors, count)},
+      stackList: StackList.generate(width, height, colors)
+    }
+  }
+
+  static generateByTemplate(width: number, height:number, colors:number, template:Array<Array<number>>){
+    return {
+      width: width,
+      height: height,
+      colors: colors,
+      field: {cells: Field.generateByTemplate(width, height, colors, template)},
+      stackList: StackList.generate(width, height, colors)
+    }
+  }
+
+  /*static generate(width:number, height:number, colors:number, breakFigureLength:number){
+    const game = new Game(width, height, colors, breakFigureLength);
+    const fieldData = Field.generate(width, height, colors, 15);
+    game.field = new Field(width, height, colors, breakFigureLength, fieldData);
+    game.stackList = new StackList(width, height, colors, StackList.generate(width, height, colors));
+    game.width = width;
+    game.height = height;
+    game.colors = colors;
+    game.field.onReverted = (cell:Cell)=>{
+      const st = game.stackList.findByCell(cell);
+      st.push(cell.color);
+    }
+    
+    return game;
+  }*/
 
   public move(stackIndex:number){
     const currentStack = this.stackList.stacks[stackIndex];
@@ -27,7 +86,11 @@ export class Game{
     throw new Error('Max iterations, break');
   }*/
 
-  public processSteps(handlers:{onStep:(next:()=>void)=>void, onFinish:()=>void}){
+  public processSteps(handlers:{onStep:(next:()=>void)=>void, onFinish:()=>void, onRemove: (figure:Array<IVector2>, color: number, combo:number)=>void}){
+    this.field.onRemove = (fig, color)=>{
+      this.combo +=1;
+      handlers.onRemove(fig, color, this.combo);
+    }
     const processStep = ()=>{
       return this.field.processStep()
     }
@@ -37,6 +100,8 @@ export class Game{
       });
     } else {
       handlers.onStep(()=>{
+        console.log('finish')
+        this.combo = 0;
         handlers.onFinish();
       });
       return;
@@ -46,6 +111,36 @@ export class Game{
   public checkFigure(point:IVector2){
     //console.log(this.field.checkFigure(point));
   }
+
+  save(){
+    return {
+      field: this.field.save(),
+      stackList: this.stackList.save(),
+      width: this.width,
+      height: this.height,
+      colors: this.colors
+    }
+  }
+
+  /*static load(data:any){
+    const game = new Game(data.width, data.height, data.colors, 3);
+    game.field = new Field(data.width, data.height, data.colors, 3, data.field.cells);
+    game.stackList = StackList.load(data.stackList);//new StackList(data.width, data.height, data.colors);
+    game.width = data.width;
+    game.height = data.height;
+    game.colors = data.colors;
+    game.field.onReverted = (cell:Cell)=>{
+      const st = game.stackList.findByCell(cell);
+      st.push(cell.color);
+    }
+    return game;
+  }*/
+}
+
+interface ICellData{
+  position: IVector2,
+  color: number,
+  direction: number
 }
 
 export class Field{
@@ -53,16 +148,81 @@ export class Field{
   public width: number;
   public height: number;
   public onReverted:(cell:Cell)=>void;
-  private breakFigureLength: number
+  public onRemove:(figure:Array<IVector2>, color: number)=>void;
+  private breakFigureLength: number;
+  colors: number;
+  //public forRemove: Array<Array<Cell>> = []
 
-  constructor(width:number, height:number, colors:number, breakFigureLength:number){
+  constructor(width:number, height:number, colors:number, breakFigureLength:number, cells:Array<ICellData>){
     this.breakFigureLength = breakFigureLength;
     this.width = width;
     this.height = height;
-    for (let i = 0; i< 10; i++){
-      let cell = new Cell(Math.floor(Math.random() * colors), 0, {y: Math.floor(Math.random() * width), x:Math.floor(Math.random() * height)});
-      this.putCell(cell);
+    this.colors = colors;
+    this.loadCells(cells);
+  }
+
+  static generateByTemplate(width:number, height:number, colors:number, template:Array<Array<number>>){
+    /*const template = [
+      [0, 1, 1, 1, 1, 0],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [0, 1, 1, 1, 1, 0],
+    ];
+    const template2 = [
+      [0, 1, 1, 1, 0],
+      [1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1],
+      [0, 1, 1, 1, 0],
+    ];*/
+    const centerPoint = {x: Math.floor((width - template[0].length) / 2), y: Math.floor((height - template.length) / 2)};
+    const result: Array<ICellData> = [];
+    template.forEach((row, y)=>{
+      row.forEach((cell, x)=>{
+        if (cell == 0) return;
+        const position = {
+          y: y + centerPoint.y, 
+          x: x + centerPoint.x
+        }
+        let cellData: ICellData = {
+          color: Math.floor(Math.random() * colors), 
+          direction: 0, 
+          position
+        };
+        result.push(cellData);
+      })
+    })
+    
+    return result
+  }
+
+  static generateRandom(width:number, height:number, colors:number, count: number){
+    const result: Array<ICellData> = [];
+    const getIndex = (x:number, y:number)=>{
+      return result.findIndex(cell=>{
+        return cell.position.x == x && cell.position.y == y;
+      });
     }
+    for (let i = 0; i< count; i++){
+      const position = {
+        y: Math.floor(Math.random() * width), 
+        x: Math.floor(Math.random() * height)
+      }
+      if (getIndex(position.x, position.y) != -1){
+        console.log('wrong position')
+        continue;
+      }
+      let cell: ICellData = {
+        color: Math.floor(Math.random() * colors), 
+        direction: 0, 
+        position
+      };
+      result.push(cell);
+      //this.putCell(cell);
+    }
+    return result
   }
 
   public putCell(cell:Cell){
@@ -92,16 +252,32 @@ export class Field{
           this.onReverted(cell);
         }
         isChanged = true;
+        //this.combo = 0;
       }
     });
+    const forRemove: IVector2[][] = [];
     if (isChanged == false){
       this.cells.forEach(cell=>{
+        if (forRemove.find(figure=> figure.find(({x, y})=> cell.position.x == x && cell.position.y == y))){
+          return;
+        }
         let fig = this.checkFigure(cell.position, cell.color);
+        
         if (fig.length>=this.breakFigureLength){
-          this.removeFigure(fig);
+          //this.removeFigure(fig);
+          forRemove.push(fig);
+          //this.combo+=1;
+          this.onRemove(fig, cell.color);
+          //console.log(JSON.stringify(fig));
           isChanged = true;
+        } else {
+          //this.combo = 0;
         }
       });
+      console.log(forRemove);
+      forRemove.forEach(it=>{
+        this.removeFigure(it);
+      })
     }
     return isChanged;
   }
@@ -157,6 +333,7 @@ export class Field{
     });
 
     this.cells = this.cells.filter(it=>!deletedCells.includes(it));
+    //this.forRemove.push(deletedCells);
   }
 
   public isAvailableLine(direction: number, initialPosition: IVector2):boolean{
@@ -174,108 +351,22 @@ export class Field{
     return false;
   }
 
-}
-
-class StackList{
-  public stacks: Array<Stack>;
-
-  constructor (width:number, height:number, colors:number){
-    this.stacks = [];
-    for (let i = 0; i< (width + height) *2; i++){
-      const stack = new Stack(colors);
-      const direction = this.getDirection(i, width, height);
-      stack.direction = direction;
-      stack.initialPosition = this.getInitial(i, width, height);
-      for (let j = 0; j<3;j++){
-        stack.push(Math.floor(Math.random()* colors));
-      }
-      this.stacks.push(stack);
+  save(){
+    return {
+      cells: this.cells.map(it=> it.save()),
     }
   }
 
-  private getDirection(index: number, width:number, height:number){
-    if (index < height) { return 1; }
-    if (index < width + height) { return 2; }
-    if (index < width * 2  + height) { return 3; }
-    return 4;
+  loadCells(cellsData: Array<any>){
+    this.cells = cellsData.map(it=> Cell.load(it));
   }
 
-  public getInitial(index: number, width:number, height:number){
-    if (index < height) { return {x: Math.floor(index % width), y: 0} }
-    if (index < width + height) { return {x: 0, y: Math.floor((index - width) % height)} }
-    if (index < width * 2  + height) {return {x: width-1, y: Math.floor((index - width - height) % height)} }
-    return {x: Math.floor(index % width), y: height - 1}
-  }
-
-  public findByCell(cell:Cell){
-    return this.stacks.find(stack=>{
-      let dir = [0, 4, 3, 2, 1];
-      return stack.initialPosition.x == cell.position.x && stack.initialPosition.y == cell.position.y && stack.direction == dir[cell.direction];
-    });
-  }
-
- /* public getStack(index:number){
-    return this.stacks[index];
+  /*static load(width:number, height:number, colors:number, data:any){
+    const field = new Field(width, height, colors, 3);
+    field.loadCells(data.cells);
+    return field;
   }*/
 
 }
 
-export class Stack{
-  public cells: Array<number> = [];
-  public direction: number;
-  public initialPosition: IVector2;
 
-  private colorsCount: number;
-  private stackLength: number = 3;
-
-  constructor(colorsCount: number){
-    this.colorsCount = colorsCount;
-  }
-
-  pop(){
-    const cell = this.cells.pop();
-    this.cells.unshift(Math.floor(Math.random() * this.colorsCount));
-    return cell;
-  }
-
-  push(color:number){
-    this.cells = this.cells.slice(this.cells.length + 1 - this.stackLength);
-    return this.cells.push(color); 
-  }
-}
-
-class Cell{
-  private _direction: number;
-  private _color: number;
-  public position: IVector2;
-
-  constructor (color:number, direction:number, position:IVector2){
-    this._color = color;
-    this._direction = direction;
-    this.position = position;
-  }
-
-  public setDirection(direction:number){
-     this._direction = direction;
-  }
-
-  public getNextPosition(){
-    const movements:Array<IVector2> = [{x:0, y:0}, {x:0, y:1},{x:1, y:0}, {x:-1, y:0}, {x:0, y:-1}];
-    const currentMovement = movements[this._direction];
-    return {x: this.position.x + currentMovement.x, y: this.position.y + currentMovement.y};
-  }
-
-  get color() {
-    return this._color;
-  }
-
-  get direction(){
-    return this._direction;
-  }
-
-}
-
-interface IVector2{
-  x: number;
-  y: number;
-}
