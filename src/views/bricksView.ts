@@ -6,6 +6,7 @@ import { ComboView } from './comboView';
 import { RemoveView } from './removeView';
 import { PauseMenu } from './pauseMenu';
 import { IVector2 } from '../bricksCore/IVector2';
+import { WinView } from '../views/winView'; 
 
 export class BricksView extends Control{
     private colors = ['#f99', '#9f9', '#99f', '#f4f', '#df0', '#f90'];
@@ -182,7 +183,11 @@ export class BricksView extends Control{
         onFinish:()=>{
             if (game.field.cells.length == 0){
               console.log('win');
-              this.onFinish?.('completed');
+              const winView = new WinView(this.removeLayer.node);
+              winView.onClose = ()=>{
+                this.onFinish?.('completed');
+              }
+              winView.animate();
             } else {
               this.locked = false;
             }
