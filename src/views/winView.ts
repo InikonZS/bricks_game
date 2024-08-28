@@ -1,19 +1,20 @@
 import Control from '../control/control';
+import './winView.css';
 
 export class WinView extends Control {
     onClose: ()=>void;
     constructor(parentNode: HTMLElement) {
-        super(parentNode, 'div', 'combo_view', 'Level completed');
+        super(parentNode, 'div', 'winView_center');
+        const animatedText = new Control(this.node, 'div', 'winView', 'Level completed')
     }
 
     animate() {
         const cellView = this;
         requestAnimationFrame(() => requestAnimationFrame(() => {
             setTimeout(() => {
-                console.log('234567');
                 cellView.node.remove();
                 this.onClose?.();
-            }, 2500);
+            }, 2900);
         }))
     }
 }
