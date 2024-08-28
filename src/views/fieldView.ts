@@ -1,4 +1,4 @@
-import { Field } from '../bricksCore/core';
+import { Field } from '../bricksCore/field';
 import Control from '../control/control';
 
 export class FieldView extends Control{
