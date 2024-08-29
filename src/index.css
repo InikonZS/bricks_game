@@ -58,6 +58,33 @@ body{
   transform: scale(0);
 }
 
+.cell__animate3{
+  transition-duration: 800ms;
+  transform: scale(0);
+  opacity: 0;
+}
+
+.cell__animate2{
+  animation: cell-remove2 1500ms forwards;
+}
+
+@keyframes cell-remove2{
+  0%{
+    transform: scale(1) rotateZ(0deg);
+    opacity: 1;
+  }
+
+  40%{
+    transform: scale(0.5) rotateZ(180deg);
+    opacity: 1;
+  }
+
+  100%{
+    transform: scale(2) rotateZ(1080deg);
+    opacity: 0;
+  }
+}
+
 .grid_wrapper{
   display: grid; 
   grid-template-columns: 0fr 1fr 0fr;
@@ -204,10 +231,45 @@ body{
 .combo_view{
   left: 50%;
   position: absolute;
-  font-size: calc(var(--cellSize) / 2);
+  font-size: calc(var(--cellSize) * 1.5 / 2);
   top: 50%;
-  transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(0);
   transition-duration: 400ms;
+}
+
+.combo_animation1{
+  animation: combo_ani1 1s forwards;
+}
+
+@keyframes combo_ani1{
+  0%{
+    transform: translate(-50%, -50%) scale(0, 0);
+    opacity: 0;
+  }
+
+  10%{
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2, 1);
+  }
+
+  15%{
+    transform: translate(-50%, -50%) scale(0.9, 1);
+  }
+  20%{
+    transform: translate(-50%, -50%) scale(1, 1);
+  }
+
+  85%{
+    transform: translate(-50%, -50%) scale(0.9, 1);
+  }
+  90%{
+    transform: translate(-50%, -50%) scale(1, 1);
+    opacity: 1;
+  }
+  100%{
+    transform: translate(-50%, -50%) scale(0, 0);
+    opacity: 0;
+  }
 }
 
 .level_container{

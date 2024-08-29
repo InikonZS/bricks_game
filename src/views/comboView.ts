@@ -1,6 +1,7 @@
 import Control from '../control/control';
 
 export class ComboView extends Control{
+    onClose: ()=>void;
     constructor(parentNode:HTMLElement, combo: number){
       super(parentNode, 'div', 'combo_view', 'Combo: '+ combo);
       //this.node.style.left = '0';
@@ -12,8 +13,8 @@ export class ComboView extends Control{
     animate(){
       const cellView = this;
       requestAnimationFrame(()=>requestAnimationFrame(()=>{
-        
-        //cellView.node.classList.add('cell__animate');
+
+        cellView.node.classList.add('combo_animation1');
         //cellView.node.ontransitionend = ()=>{
             /*cellView.node.ontransitionend = null;
             cellView.node.classList.remove('cell__animate');
@@ -21,7 +22,8 @@ export class ComboView extends Control{
             cellView.node.textContent = '';*/
             setTimeout(()=>{
               cellView.node.remove();
-            }, 500);
+              this.onClose?.();
+            }, 1000);
             
             //this.fieldModel.forRemove = this.fieldModel.forRemove.filter(it=> it !== figure);
         //}

@@ -19,6 +19,7 @@ export class BricksView extends Control{
     gridWrapper: Control;
     flw: Control;
     header: Control<HTMLElement>;
+    combos: Array<ComboView> = [];
   
     constructor (parentNode: HTMLElement, game:Game){
       super(parentNode, 'div', 'bricks_wrapper');
@@ -195,12 +196,24 @@ export class BricksView extends Control{
         onRemove:(figure:Array<IVector2>, color:number,combo:number)=>{
           console.log('combo '+combo);
           if (combo>1){
-            const comoView = new ComboView(this.removeLayer.node, combo);
-            comoView.animate();
+            const comboView = new ComboView(this.removeLayer.node, combo);
+            this.combos.push(comboView);
+            comboView.onClose =()=>{
+              console.log(this.combos.length);
+              this.combos.shift();
+              const nextCombo = this.combos[0];
+              if (nextCombo){
+                nextCombo.animate();
+              }
+            }
+            if (this.combos.length == 1){
+              comboView.animate();
+            }
           }
+          const animationType = Math.floor(Math.random()* RemoveView.animationsCount)
           figure.forEach(cell=>{
             const cellView = new RemoveView(this.removeLayer.node, cell, color);
-            cellView.animate();
+            cellView.animate(animationType);
             
           })
         }
