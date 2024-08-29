@@ -1,3 +1,4 @@
+import { ICellData } from "./interfaces";
 import { IVector2 } from "./IVector2";
 
 export class Cell{
@@ -37,7 +38,7 @@ export class Cell{
         }
     }
 
-    static load(data:any){
+    static load(data:ICellData){
         return new Cell(data.color, data.direction, data.position);
     }
   

@@ -6,7 +6,7 @@ body{
   margin: 0px;
   padding: 0px;
   --cellColor1: #f90;
-  --cellColor2: #9f0;
+  --cellColor2: #96d5ce;
   --cellColor3: #09f;
   --cellColor4: #090;
   --cellColor5: #90f;
@@ -56,6 +56,33 @@ body{
 .cell__animate{
   transition-duration: 400ms;
   transform: scale(0);
+}
+
+.cell__animate3{
+  transition-duration: 800ms;
+  transform: scale(0);
+  opacity: 0;
+}
+
+.cell__animate2{
+  animation: cell-remove2 1500ms forwards;
+}
+
+@keyframes cell-remove2{
+  0%{
+    transform: scale(1) rotateZ(0deg);
+    opacity: 1;
+  }
+
+  40%{
+    transform: scale(0.5) rotateZ(180deg);
+    opacity: 1;
+  }
+
+  100%{
+    transform: scale(2) rotateZ(1080deg);
+    opacity: 0;
+  }
 }
 
 .grid_wrapper{
@@ -149,6 +176,7 @@ body{
 .settings_wrapper{
   width: 100%;
   max-width: 400px;
+  position: relative;
 }
 
 .option_text{
@@ -163,8 +191,18 @@ body{
 }
 
 .option_button{
+  color: #ccc;
   height: 40px;
-  background-color: #09f;
+  background: linear-gradient(45deg, #09f4, #00ff6e22);
+  border-radius: 7px;
+  text-shadow: #000 0px 0px 2px, #000 0px 0px 4px;
+  background-color: #09f4;
+  border: none;
+}
+
+.option_button:hover{
+  color: #fff;
+  background: linear-gradient(45deg, #09f9, #00fbff77);
 }
 
 .header_button{
@@ -193,18 +231,82 @@ body{
 .combo_view{
   left: 50%;
   position: absolute;
-  font-size: calc(var(--cellSize) / 2);
+  font-size: calc(var(--cellSize) * 1.5 / 2);
   top: 50%;
-  transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(0);
   transition-duration: 400ms;
+}
+
+.combo_animation1{
+  animation: combo_ani1 1s forwards;
+}
+
+@keyframes combo_ani1{
+  0%{
+    transform: translate(-50%, -50%) scale(0, 0);
+    opacity: 0;
+  }
+
+  10%{
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2, 1);
+  }
+
+  15%{
+    transform: translate(-50%, -50%) scale(0.9, 1);
+  }
+  20%{
+    transform: translate(-50%, -50%) scale(1, 1);
+  }
+
+  85%{
+    transform: translate(-50%, -50%) scale(0.9, 1);
+  }
+  90%{
+    transform: translate(-50%, -50%) scale(1, 1);
+    opacity: 1;
+  }
+  100%{
+    transform: translate(-50%, -50%) scale(0, 0);
+    opacity: 0;
+  }
 }
 
 .level_container{
   display: flex;
+  gap: 3px;
 }
 
 .level_button{
-  height: 40px;
-  background-color: #09f;
   width: 100%;
+  font-size: 22px;
+  color: #ccc;
+  height: 50px;
+  background: linear-gradient(45deg, #09f4, #00ff6e22);
+  border-radius: 7px;
+  text-shadow: #000 0px 0px 2px, #000 0px 0px 4px;
+  background-color: #09f4;
+  border: none;
+}
+
+.level_button:hover{
+  color: #fff;
+  background: linear-gradient(45deg, #09f9, #00fbff77);
+}
+
+.main_menu{
+  padding-bottom: 70px;
+}
+
+.bricks_logo{
+  margin-bottom: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  font-size: 70px;
+  --color: #4ba1ff;
+  text-shadow: var(--color) -2px -2px 0px, var(--color) 0px -2px 0px, var(--color) 2px -2px 0px, 
+  var(--color) -2px 0px 0px, var(--color) 2px 0px 0px,
+  var(--color) -2px 2px 0px, var(--color) 0px 2px 0px, var(--color) 2px 2px 0px
 }

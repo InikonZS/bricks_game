@@ -1,0 +1,56 @@
+.mainAnimation_subFieldWrap{
+    position: relative;
+    display: flex;
+    width: fit-content;
+    overflow: hidden;
+}
+
+.mainAnimation_wrap{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    z-index: -1;
+}
+
+.mainAnimation_subFieldShade{
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(transparent, black 70%);
+}
+.mainAnimation_subField{
+    background-color: #222;
+    position: relative;
+    width: 500px;
+    height: 500px;
+    animation: rot_ani 150s infinite linear;
+}
+
+@keyframes rot_ani {
+    0%{
+        transform: rotateZ(0deg) rotateY(0deg) rotateX(-15deg);
+    }
+
+    50%{
+        transform: rotateZ(540deg) rotateY(30deg) rotateX(15deg);
+    }
+
+    100%{
+        transform: rotateZ(1080deg) rotateY(0deg) rotateX(-15deg);
+    }
+}
+
+.mainAnimation_cell{
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: #fc0;
+}
