@@ -3,7 +3,9 @@ import { BricksView } from './views/bricksView';
 import { SettingsView } from './views/settingsView';
 import { MainMenu } from './views/mainMenu';
 import { levelGenerators } from './bricksCore/levels';
+import { yandex } from './platforms/yandex';
 import './index.css';
+
 
 function startGame(){
   const root = document.querySelector<HTMLElement>('#app');
@@ -90,6 +92,8 @@ loadBtn.node.onclick = ()=>{
   //@ts-ignore
   loadGame(window.saved);
 }*/
+
+yandex.init();
 
 console.log("App started");
 
