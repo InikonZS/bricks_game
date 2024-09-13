@@ -179,6 +179,16 @@ body{
   position: relative;
 }
 
+.option_line{
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.option_block{
+  width: 100%;
+}
+
 .option_text{
   width: 100%;
   font-size: 20px;
@@ -203,6 +213,14 @@ body{
 .option_button:hover{
   color: #fff;
   background: linear-gradient(45deg, #09f9, #00fbff77);
+}
+
+.option_field{
+  --cellSize: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 30px;
 }
 
 .header_button{
