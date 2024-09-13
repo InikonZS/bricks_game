@@ -7,6 +7,7 @@ import { RemoveView } from './removeView';
 import { PauseMenu } from './pauseMenu';
 import { IVector2 } from '../bricksCore/IVector2';
 import { WinView } from '../views/winView'; 
+import { ScoreBlock } from './scoreBlock/scoreBlock';
 
 export class BricksView extends Control{
     private colors = ['#f99', '#9f9', '#99f', '#f4f', '#df0', '#f90'];
@@ -20,6 +21,7 @@ export class BricksView extends Control{
     flw: Control;
     header: Control<HTMLElement>;
     combos: Array<ComboView> = [];
+  scoreBlock: ScoreBlock;
   
     constructor (parentNode: HTMLElement, game:Game){
       super(parentNode, 'div', 'bricks_wrapper');
@@ -52,6 +54,9 @@ export class BricksView extends Control{
         gridZones.push(new Control(wrapper.node, 'div', 'grid_zone' + (i==4&&' gamefield')));
       }
   
+      this.scoreBlock = new ScoreBlock(gridZones[2].node);
+      this.scoreBlock.update({});
+
       const menuBtn = new Control(gridZones[0].node, 'button', 'header_button', 'menu');
       menuBtn.node.onclick = ()=>{
         const overlay = new Control(this.node, 'div', 'overlay');
@@ -169,6 +174,7 @@ export class BricksView extends Control{
       this.locked = true;
       const game = this.game;
       game.move(stackIndex);
+      this.scoreBlock.update({score:game.score, moves: game.moves});
       //game.processMove();
       let timer = 0;
       game.processSteps({
@@ -210,6 +216,7 @@ export class BricksView extends Control{
               comboView.animate();
             }
           }
+          this.scoreBlock.update({score:game.score, moves: game.moves})
           const animationType = Math.floor(Math.random()* RemoveView.animationsCount)
           figure.forEach(cell=>{
             const cellView = new RemoveView(this.removeLayer.node, cell, color);

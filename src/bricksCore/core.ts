@@ -17,6 +17,8 @@ export interface IGameData{
 export class Game{
   public field: Field;
   public stackList: StackList;
+  score: number = 0;
+  moves: number = 0;
   combo: number = 0;
   width: number;
   height: number;
@@ -75,6 +77,7 @@ export class Game{
   public move(stackIndex:number){
     const currentStack = this.stackList.stacks[stackIndex];
     if (this.field.isAvailableLine(currentStack.direction, currentStack.initialPosition)){
+      this.moves++;
       this.field.putCell(new Cell(currentStack.pop(), currentStack.direction, {...currentStack.initialPosition}));
     }
   }
@@ -91,6 +94,7 @@ export class Game{
   public processSteps(handlers:{onStep:(next:()=>void)=>void, onFinish:()=>void, onRemove: (figure:Array<IVector2>, color: number, combo:number)=>void}){
     this.field.onRemove = (fig, color)=>{
       this.combo +=1;
+      this.score += (fig.length * (fig.length - 2)) * this.combo;
       handlers.onRemove(fig, color, this.combo);
     }
     const processStep = ()=>{
