@@ -4,7 +4,7 @@ import { localize } from '../localization/localization';
 export class ComboView extends Control{
     onClose: ()=>void;
     constructor(parentNode:HTMLElement, combo: number){
-      super(parentNode, 'div', 'combo_view', 'Combo: '+ combo);
+      super(parentNode, 'div', 'combo_view', localize.currentLang['combo'] + ': '+ combo);
       //this.node.style.left = '0';
       //.node.style.top =  '0';
       //this.node.style.fontSize = ``;

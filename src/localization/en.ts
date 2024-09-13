@@ -15,7 +15,7 @@ export const en = {
     regenerate: 'Regenerate',
 
     combo: 'Combo',
-    leveCompleted: 'Level completed',
+    levelCompleted: 'Level completed',
 
     saveGame: 'Save game',
     mainMenu: 'Main menu',

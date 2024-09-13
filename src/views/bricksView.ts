@@ -8,6 +8,7 @@ import { PauseMenu } from './pauseMenu';
 import { IVector2 } from '../bricksCore/IVector2';
 import { WinView } from '../views/winView'; 
 import { ScoreBlock } from './scoreBlock/scoreBlock';
+import { localize } from '../localization/localization';
 
 export class BricksView extends Control{
     private colors = ['#f99', '#9f9', '#99f', '#f4f', '#df0', '#f90'];
@@ -21,7 +22,8 @@ export class BricksView extends Control{
     flw: Control;
     header: Control<HTMLElement>;
     combos: Array<ComboView> = [];
-  scoreBlock: ScoreBlock;
+    scoreBlock: ScoreBlock;
+    menuBtn: Control<HTMLElement>;
   
     constructor (parentNode: HTMLElement, game:Game){
       super(parentNode, 'div', 'bricks_wrapper');
@@ -57,8 +59,8 @@ export class BricksView extends Control{
       this.scoreBlock = new ScoreBlock(gridZones[2].node);
       this.scoreBlock.update({});
 
-      const menuBtn = new Control(gridZones[0].node, 'button', 'header_button', 'menu');
-      menuBtn.node.onclick = ()=>{
+      this.menuBtn = new Control(gridZones[0].node, 'button', 'header_button', 'menu');
+      this.menuBtn.node.onclick = ()=>{
         const overlay = new Control(this.node, 'div', 'overlay');
         const menu = new PauseMenu(overlay.node);
         menu.onSubmit = (result)=>{
@@ -141,6 +143,18 @@ export class BricksView extends Control{
           this.resize();
         }))
       }
+      this.updateLocalize = this.updateLocalize.bind(this);
+      localize.onChange.add(this.updateLocalize);
+      this.updateLocalize();
+    }
+
+    updateLocalize() {
+        this.menuBtn.node.textContent = localize.currentLang['menu'];
+    }
+
+    destroy(): void {
+        localize.onChange.remove(this.updateLocalize);
+        super.destroy();
     }
   
     resize(){
@@ -231,8 +245,5 @@ export class BricksView extends Control{
       this.stakes.forEach(stake=>stake.update());
       this.fieldView.update();
     }
-  
-    destroy(){
-      this.node.remove();
-    }
+    
   }

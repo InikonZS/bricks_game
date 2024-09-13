@@ -17,8 +17,10 @@ export class Localization {
         this.langs = {
             en: en,
             ru: ru
-        }
+        } 
+        this.currentLangName = 'ru';
         this.currentLang = this.langs['ru'];
+       
     }
 
     getAvailableLangs = ()=>{

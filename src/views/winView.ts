@@ -6,7 +6,7 @@ export class WinView extends Control {
     onClose: ()=>void;
     constructor(parentNode: HTMLElement) {
         super(parentNode, 'div', 'winView_center');
-        const animatedText = new Control(this.node, 'div', 'winView', 'Level completed')
+        const animatedText = new Control(this.node, 'div', 'winView', localize.currentLang['levelCompleted'])
     }
 
     animate() {

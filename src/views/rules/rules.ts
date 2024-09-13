@@ -1,15 +1,17 @@
 import Control from '../../control/control';
-import content from './rules.html';
+import contentExamples from './rulesExamples.html';
+import contentTextsRu from './rulesTexts-ru.html';
+import contentTextsEn from './rulesTexts-en.html';
 import './rules.css';
+import { localize } from '../../localization/localization';
 
-console.log(content);
 export class RulesView extends Control {
     onClose: () => void;
     constructor(parentNode: HTMLElement) {
         super(parentNode, 'div', 'rules_view');
         const center = new Control(this.node, 'div', 'rules_center');
         const contentContainer = new Control(center.node, 'div', 'rules_content_container');
-        contentContainer.node.innerHTML = content;
+        contentContainer.node.innerHTML = {ru: contentTextsRu, en: contentTextsEn}[localize.currentLangName] + contentExamples;
         const buttonsContainer = new Control(center.node, 'div', 'rules_buttons');
         const closeButton = new Control(buttonsContainer.node, 'button', 'option_button rules_close', 'close');
         closeButton.node.onclick = ()=>{
