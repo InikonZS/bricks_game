@@ -1,6 +1,7 @@
 import { Cell } from './cell';
 import { IVector2 } from './IVector2';
 import { ICellData } from './interfaces';
+import { randomizeColors } from './colorHard';
 
 export class Field{
     public cells: Array<Cell> = [];
@@ -37,6 +38,7 @@ export class Field{
         [0, 1, 1, 1, 0],
       ];*/
       const centerPoint = {y: Math.floor((width - template[0].length) / 2), x: Math.floor((height - template.length) / 2)};
+      const preparedColors = randomizeColors(template, colors);
       const result: Array<ICellData> = [];
       template.forEach((row, y)=>{
         row.forEach((cell, x)=>{
@@ -46,7 +48,7 @@ export class Field{
             x: x + centerPoint.x
           }
           let cellData: ICellData = {
-            color: Math.floor(Math.random() * colors), 
+            color: preparedColors[y][x],//Math.floor(Math.random() * colors), 
             direction: 0, 
             position
           };

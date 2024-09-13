@@ -1,6 +1,7 @@
 import Control from '../control/control';
 import {generateFourTemplate, generateSimpleTemplate, generateTemplate} from '../bricksCore/template';
 import { localize } from '../localization/localization';
+import { randomizeColors } from '../bricksCore/colorHard'; 
 
 interface ISettings{
     colors: number,
@@ -150,13 +151,14 @@ export class SettingsView extends Control{
       }
 
       const centerPoint = {x: Math.floor((data.width - data.template[0].length) / 2), y: Math.floor((data.height - data.template.length) / 2)};
+      const preparedColors = randomizeColors(data.template, data.colors);
       for (let i = 0; i<data.height; i++){
         const rowView = new Control(this.previewField.node, 'div', 'row');
         const row: Array<Control> = [];
         for (let j = 0; j< data.width; j++){
           let cell = new Control(rowView.node, 'div', 'cell cell__field');  
           //row.push(cell); 
-          const color = Math.floor(Math.random()*data.colors+1);
+          const color = preparedColors[i-centerPoint.y]?.[j-centerPoint.x];//Math.floor(Math.random()*data.colors+1);
           cell.node.style.backgroundColor = data.template[i-centerPoint.y]?.[j-centerPoint.x] ? `var(--cellColor${color + 1})` : `var(--cellColorEmpty)`
         }
         //this.cells.push(row);
