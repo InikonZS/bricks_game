@@ -8,6 +8,8 @@ export interface IGameData{
   width: number,
   height: number,
   colors: number,
+  score?: number,
+  moves?: number,
   field: {
     cells: Array<ICellData>
   }
@@ -28,6 +30,8 @@ export class Game{
     this.width = data.width;
     this.height = data.height;
     this.colors = data.colors;
+    this.score = data.score || 0;
+    this.moves = data.moves || 0;
     const fieldData = data.field.cells;//Field.generate(width, height, colors, 15);
     this.field = new Field(data.width, data.height, data.colors, breakFigureLength, fieldData);
     const stackData = data.stackList;
@@ -124,7 +128,9 @@ export class Game{
       stackList: this.stackList.save(),
       width: this.width,
       height: this.height,
-      colors: this.colors
+      colors: this.colors,
+      moves: this.moves,
+      score: this.score
     }
   }
 

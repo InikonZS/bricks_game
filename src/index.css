@@ -186,6 +186,10 @@ body{
   margin-bottom: 30px;
 }
 
+.option_size_line{
+  display: none; /*temporaty disabled fieldsize*/
+}
+
 .option_block{
   position: relative;
   width: 100%;
@@ -237,6 +241,11 @@ body{
 .option_button:hover{
   color: #fff;
   background: linear-gradient(45deg, #09f9, #00fbff77);
+}
+
+.option_button:disabled{
+  opacity: 0.2;
+  pointer-events: none;
 }
 
 .option_field{

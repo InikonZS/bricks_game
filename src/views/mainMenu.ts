@@ -6,7 +6,7 @@ import { localize } from '../localization/localization';
 export class MainMenu extends Control{
     onSubmit: (selected:string, data:any)=>void;
   customGame: Control<HTMLElement>;
-  loadGame: Control<HTMLElement>;
+  loadGame: Control<HTMLButtonElement>;
   rulesButton: Control<HTMLElement>;
   levelContainerTitle: Control<HTMLElement>;
   langSelectButton: Control<HTMLElement>;
@@ -20,7 +20,11 @@ export class MainMenu extends Control{
         this.onSubmit('custom', null);
       }
   
-      this.loadGame = new Control(this.node, 'button', 'option_input option_button', 'load game');
+      const saved = localStorage.getItem('saved');
+      this.loadGame = new Control<HTMLButtonElement>(this.node, 'button', 'option_input option_button', 'load game');
+      if (!saved){
+        this.loadGame.node.disabled = true;
+      }
       this.loadGame.node.onclick = ()=>{
         this.onSubmit('load', null);
       }

@@ -15,7 +15,7 @@ export const ru = {
     regenerate: 'Обновить',
 
     combo: 'Комбо',
-    leveCompleted: 'Уровень пройден',
+    levelCompleted: 'Уровень пройден',
 
     saveGame: 'Сохранить игру',
     mainMenu: 'Главное меню',

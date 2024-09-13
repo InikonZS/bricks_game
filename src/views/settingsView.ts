@@ -59,7 +59,7 @@ export class SettingsView extends Control{
       colors.node.min = '2';
       colors.node.max = '10';
   
-      const sizeLine = new Control(this.node, 'div', 'option_line');
+      const sizeLine = new Control(this.node, 'div', 'option_line option_size_line');
 
       const sizeAutoBlock = new Control(sizeLine.node, 'div', 'option_block');
       sizeAutoBlock.node.style.width = 'fit-content';

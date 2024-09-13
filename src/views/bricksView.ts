@@ -57,7 +57,7 @@ export class BricksView extends Control{
       }
   
       this.scoreBlock = new ScoreBlock(gridZones[2].node);
-      this.scoreBlock.update({});
+      this.scoreBlock.update({score: game.score, moves: game.moves});
 
       this.menuBtn = new Control(gridZones[0].node, 'button', 'header_button', 'menu');
       this.menuBtn.node.onclick = ()=>{
