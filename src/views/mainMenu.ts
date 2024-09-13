@@ -18,6 +18,11 @@ export class MainMenu extends Control{
       loadGame.node.onclick = ()=>{
         this.onSubmit('load', null);
       }
+
+      const rulesButton = new Control(this.node, 'button', 'option_input option_button', 'how to play');
+      rulesButton.node.onclick = ()=>{
+        this.onSubmit('rules', null);
+      }
   
       const levelContainer = new Control(this.node, 'div', 'level_container');
       levelGenerators.forEach((levelGenerator, index)=>{

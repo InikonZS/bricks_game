@@ -1,0 +1,77 @@
+.rules_view{
+    position: fixed;
+    background-color: #0009;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.rules_center{
+    max-width: 400px;
+    background-color: #000000;
+    border: 1px solid #444;
+    padding: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+}
+
+.rules_content_container{
+
+}
+
+.rules_close{
+    padding: 10px 20px;
+}
+
+.rules_view_animate{
+
+}
+
+.rules_field{
+    margin: 5px 5px;
+}
+
+.rules_row{
+    display: flex;
+}
+  
+.rules_cell{
+    width: 30px;
+    height: 30px;
+    margin: 0px;
+    background-color: var(--cellColor1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+    border: solid 1px #000;
+    border-radius: 3px;
+}
+
+.rules_cell_empty{
+    background-color: var(--cellColorEmpty);
+}
+
+.rules_examples{
+    display: flex;
+    justify-content: center;
+}
+
+.rules_head{
+    font-size: 22px;
+    margin: 5px;
+    text-align: center;
+}
+
+.rules_p{
+    font-size: 12px;
+    margin: 5px;
+}
+
+.rules_buttons{
+    display: flex;
+    justify-content: center;
+}

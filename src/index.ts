@@ -4,9 +4,10 @@ import { SettingsView } from './views/settingsView';
 import { MainMenu } from './views/mainMenu';
 import { levelGenerators } from './bricksCore/levels';
 import { yandex } from './platforms/yandex';
+import { RulesView } from './views/rules/rules'; 
 import './index.css';
 
-
+console.log(RulesView);
 function startGame(){
   const root = document.querySelector<HTMLElement>('#app');
   const mainMenu = new MainMenu(root);
@@ -22,9 +23,13 @@ function startGame(){
     } else if (selected == 'custom'){
       mainMenu.destroy();
       const settingsView = new SettingsView(root);
+      settingsView.onBack=()=>{
+        settingsView.destroy();
+        startGame();
+      }
       settingsView.onSubmit = (settings)=>{
         //const game = new Game(3, Game.generate(6, 10, 5));//Game.generate(6, 10, 2, 3);
-        const generated = Game.generateRandom(settings.height, settings.width, settings.colors, 15);
+        const generated = Game.generateByTemplate(settings.height, settings.width, settings.colors, settings.template);//Game.generateRandom(settings.height, settings.width, settings.colors, 15);
         const startWithGenerated = ()=>{
           const game = new Game(3, generated);//Game.generate(6, 10, 2, 3);
           const view = new BricksView(root, game);
@@ -73,6 +78,11 @@ function startGame(){
         }
         startWithGenerated();     
       
+    } else if (selected == 'rules'){
+      //mainMenu.destroy();
+      console.log('rul')
+      const rulesView = new RulesView(root);
+     // rulesView.
     }
   })
     
@@ -93,8 +103,9 @@ loadBtn.node.onclick = ()=>{
   loadGame(window.saved);
 }*/
 
-yandex.init();
+yandex.init().then(()=>{
+  yandex.sdk?.features.LoadingAPI.ready();
+  console.log("App started");
+  startGame();
+});
 
-console.log("App started");
-
-startGame();

@@ -36,7 +36,7 @@ export class Field{
         [1, 1, 1, 1, 1],
         [0, 1, 1, 1, 0],
       ];*/
-      const centerPoint = {x: Math.floor((width - template[0].length) / 2), y: Math.floor((height - template.length) / 2)};
+      const centerPoint = {y: Math.floor((width - template[0].length) / 2), x: Math.floor((height - template.length) / 2)};
       const result: Array<ICellData> = [];
       template.forEach((row, y)=>{
         row.forEach((cell, x)=>{

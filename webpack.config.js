@@ -44,6 +44,12 @@ const config = {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
                 type: 'asset',
             },
+            {
+                test: (name, ...a)=>{
+                    return !name.endsWith('index.html') && (/\.(html)$/i).test(name)
+                },
+                type: 'asset/source',
+            }
 
             // Add your rules for custom modules here
             // Learn more about loaders from https://webpack.js.org/loaders/
