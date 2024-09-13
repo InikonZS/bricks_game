@@ -1,5 +1,6 @@
 import Control from '../control/control';
 import {generateFourTemplate, generateSimpleTemplate, generateTemplate} from '../bricksCore/template';
+import { localize } from '../localization/localization';
 
 interface ISettings{
     colors: number,
@@ -18,6 +19,14 @@ export class SettingsView extends Control{
   sizeX: Control<HTMLInputElement>;
   sizeY: Control<HTMLInputElement>;
   previewField: Control<HTMLElement>;
+  countText: Control<HTMLElement>;
+  colorsText: Control<HTMLElement>;
+  sizeAutoText: Control<HTMLElement>;
+  sizeXText: Control<HTMLElement>;
+  sizeYText: Control<HTMLElement>;
+  back: Control<HTMLElement>;
+  preview: Control<HTMLElement>;
+  submit: Control<HTMLElement>;
   
     constructor(parentNode:HTMLElement){
       super(parentNode, 'div', 'settings_wrapper');
@@ -25,7 +34,7 @@ export class SettingsView extends Control{
       const countColorLine = new Control(this.node, 'div', 'option_line');
 
       const countBlock = new Control(countColorLine.node, 'div', 'option_block');
-      const countText = new Control(countBlock.node, 'div', 'option_text', 'count: ');
+      this.countText = new Control(countBlock.node, 'div', 'option_text', 'count: ');
       const count = new Control<HTMLInputElement>(countBlock.node, 'input', 'option_input');
       count.node.oninput = ()=>{
         this.refreshPreview();
@@ -38,7 +47,7 @@ export class SettingsView extends Control{
       count.node.max = '200';
   
       const colorsBlock = new Control(countColorLine.node, 'div', 'option_block');
-      const colorsText = new Control(colorsBlock.node, 'div', 'option_text', 'colors: ');
+      this.colorsText = new Control(colorsBlock.node, 'div', 'option_text', 'colors: ');
       const colors = new Control<HTMLInputElement>(colorsBlock.node, 'input', 'option_input');
       colors.node.oninput = ()=>{
         this.refreshPreview(true);
@@ -54,21 +63,21 @@ export class SettingsView extends Control{
 
       const sizeAutoBlock = new Control(sizeLine.node, 'div', 'option_block');
       sizeAutoBlock.node.style.width = 'fit-content';
-      const sizeAutoText = new Control(sizeAutoBlock.node, 'div', 'option_text', 'Auto');
+      this.sizeAutoText = new Control(sizeAutoBlock.node, 'div', 'option_text', 'Auto');
       const sizeAuto = new Control<HTMLInputElement>(sizeAutoBlock.node, 'input', 'option_input');
       this.sizeAuto = sizeAuto;
       sizeAuto.node.type = 'checkbox';
       sizeAuto.node.checked = true;
 
       const sizeXBlock = new Control(sizeLine.node, 'div', 'option_block');
-      const sizeXText = new Control(sizeXBlock.node, 'div', 'option_text', 'sizeX: ');
+      this.sizeXText = new Control(sizeXBlock.node, 'div', 'option_text', 'sizeX: ');
       const sizeX = new Control<HTMLInputElement>(sizeXBlock.node, 'input', 'option_input');
       this.sizeX = sizeX;
       sizeX.node.type = 'number';
       sizeX.node.value = '10';
   
       const sizeYBlock = new Control(sizeLine.node, 'div', 'option_block');
-      const sizeYText = new Control(sizeYBlock.node, 'div', 'option_text', 'sizeY: ');
+      this.sizeYText = new Control(sizeYBlock.node, 'div', 'option_text', 'sizeY: ');
       const sizeY = new Control<HTMLInputElement>(sizeYBlock.node, 'input', 'option_input');
       this.sizeY = sizeY;
       sizeY.node.type = 'number';
@@ -78,14 +87,14 @@ export class SettingsView extends Control{
 
       const buttonsLine = new Control(this.node, 'div', 'option_line');
 
-      const back = new Control(buttonsLine.node, 'button', 'option_input option_button', 'Back');
-      back.node.onclick = ()=>{
+      this.back = new Control(buttonsLine.node, 'button', 'option_input option_button', 'Back');
+      this.back.node.onclick = ()=>{
         this.node.remove();
         this.onBack?.();
       }
       
-      const preview= new Control(buttonsLine.node, 'button', 'option_input option_button', 'Regenerate');
-      preview.node.onclick = ()=>{
+      this.preview= new Control(buttonsLine.node, 'button', 'option_input option_button', 'Regenerate');
+      this.preview.node.onclick = ()=>{
         this.refreshPreview();
       }
       /*let generator = generateSimpleTemplate;
@@ -101,8 +110,8 @@ export class SettingsView extends Control{
       }*/
 
       //const submitText = new Control(this.node, 'div', 'option_text', '');
-      const submit = new Control(buttonsLine.node, 'button', 'option_input option_button', 'Start game');
-      submit.node.onclick = ()=>{
+      this.submit = new Control(buttonsLine.node, 'button', 'option_input option_button', 'Start game');
+      this.submit.node.onclick = ()=>{
         this.node.remove();
         this.onSubmit?.({
           colors: colors.node.valueAsNumber,
@@ -113,7 +122,11 @@ export class SettingsView extends Control{
       }
 
       this.refreshPreview();
+      this.updateLocalize = this.updateLocalize.bind(this);
+      localize.onChange.add(this.updateLocalize);
+      this.updateLocalize();
     }
+  
 
     refreshPreview(noGen?:boolean){
       let generator = generateSimpleTemplate;
@@ -149,4 +162,20 @@ export class SettingsView extends Control{
         //this.cells.push(row);
       }
     }
+
+  updateLocalize(){
+    this.colorsText.node.textContent = localize.currentLang['colors'];
+    this.countText.node.textContent = localize.currentLang['count'];
+    this.sizeAutoText.node.textContent = localize.currentLang['sizeAuto'];
+    this.sizeXText.node.textContent = localize.currentLang['sizeX'];
+    this.sizeYText.node.textContent = localize.currentLang['sizeY'];
+    this.submit.node.textContent = localize.currentLang['startGame'];
+    this.back.node.textContent = localize.currentLang['back'];
+    this.preview.node.textContent = localize.currentLang['regenerate'];
+  }
+
+  destroy(): void {
+    localize.onChange.remove(this.updateLocalize);
+    super.destroy();
+  }
 }

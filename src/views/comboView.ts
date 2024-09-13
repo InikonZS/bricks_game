@@ -1,4 +1,5 @@
 import Control from '../control/control';
+import { localize } from '../localization/localization';
 
 export class ComboView extends Control{
     onClose: ()=>void;

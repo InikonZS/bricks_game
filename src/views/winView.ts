@@ -1,5 +1,6 @@
 import Control from '../control/control';
 import './winView.css';
+import { localize } from '../localization/localization';
 
 export class WinView extends Control {
     onClose: ()=>void;
