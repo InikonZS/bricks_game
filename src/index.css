@@ -183,21 +183,45 @@ body{
   display: flex;
   gap: 10px;
   width: 100%;
+  margin-bottom: 30px;
 }
 
 .option_block{
+  position: relative;
   width: 100%;
+  border: 1px solid #444;
+  border-radius: 5px;
+  padding: 5px 10px;
+  padding-top: 10px;
 }
 
 .option_text{
-  width: 100%;
-  font-size: 20px;
+  top: -10px;
+  position: absolute;
+  font-size: 14px;
+  background: #000;
+  padding: 0px 5px;
+  left: 5px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #ccc;
 }
 
 .option_input{
   width: 100%;
   font-size: 20px;
-  margin-bottom: 40px;
+  border: none;
+  background-color: transparent;
+  border-radius: 4px;
+  color: #ccc;
+  margin-bottom: 30px;
+}
+
+.option_block .option_input{
+  margin-bottom: 0px;
+}
+
+.option_input:focus-visible{
+  outline: 1px solid #444;
 }
 
 .option_button{
