@@ -5,10 +5,21 @@ import { MainMenu } from './views/mainMenu';
 import { levelGenerators } from './bricksCore/levels';
 import { yandex } from './platforms/yandex';
 import { RulesView } from './views/rules/rules'; 
+import { Localization, localize } from './localization/localization';
 import './index.css';
 
-console.log(RulesView);
+let disposeLocalize: ()=>void;
+
 function startGame(){
+  const localizeHandler = ()=>{
+    console.log('translated main to '+localize.currentLangName);
+  }
+  disposeLocalize?.();
+  disposeLocalize = ()=>{
+    localize.onChange.remove(localizeHandler);
+  }
+  localize.onChange.add(localizeHandler);
+
   const root = document.querySelector<HTMLElement>('#app');
   const mainMenu = new MainMenu(root);
   mainMenu.onSubmit = ((selected, data)=>{
@@ -86,6 +97,7 @@ function startGame(){
     }
   })
     
+  localizeHandler();
 }
 
 function loadGame(data:IGameData){
