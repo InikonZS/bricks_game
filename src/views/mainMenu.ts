@@ -10,6 +10,7 @@ export class MainMenu extends Control{
   rulesButton: Control<HTMLElement>;
   levelContainerTitle: Control<HTMLElement>;
   langSelectButton: Control<HTMLElement>;
+  backAnimation: MainAnimation;
   
     constructor(parentNode:HTMLElement){
       super(parentNode, 'div', 'settings_wrapper main_menu');
@@ -49,7 +50,7 @@ export class MainMenu extends Control{
         }
       });
 
-      const backAnimation = new MainAnimation(this.node);
+      this.backAnimation = new MainAnimation(this.node);
 
       this.updateLocalize = this.updateLocalize.bind(this);
       localize.onChange.add(this.updateLocalize);
@@ -66,6 +67,7 @@ export class MainMenu extends Control{
 
     destroy(): void {
       localize.onChange.remove(this.updateLocalize);
+      this.backAnimation.destroy();
       super.destroy();
     }
   }

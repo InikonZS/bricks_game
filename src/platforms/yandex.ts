@@ -8,7 +8,7 @@ class Yandex{
     private async loadSdk() {
         return new Promise<void>((resolve, reject)=>{
             var s = document.createElement('script');
-            s.src = "https://sdk.games.s3.yandex.net/sdk.js";
+            s.src = "/sdk.js";
             s.async = true;
             s.onload = () => {
                 resolve();
