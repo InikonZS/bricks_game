@@ -361,3 +361,115 @@ body{
   var(--color) -2px 0px 0px, var(--color) 2px 0px 0px,
   var(--color) -2px 2px 0px, var(--color) 0px 2px 0px, var(--color) 2px 2px 0px
 }
+
+.stack{
+  position: relative;
+  overflow: hidden;
+}
+.stack_hover{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;  
+  justify-content: center;
+  align-items: center;
+  display: none;
+  /*background-color: #0009;*/
+  animation: 500ms linear infinite;
+}
+
+.stack_hover1{
+  flex-direction: column;
+  animation-name: stack_ani1;
+}
+.stack_hover2{
+  animation-name: stack_ani2;
+}
+.stack_hover3{
+  animation-name: stack_ani3;
+}
+.stack_hover4{
+  flex-direction: column;
+  animation-name: stack_ani4;
+}
+
+.stack:hover .stack_hover{  
+  display: flex;  
+  
+}
+
+.stack_vertical{
+
+}
+
+.stack_arrow{
+  fill: #fff9;
+  width: 70%;
+  height: 70%;
+  transform-origin: center;
+  flex-shrink: 0;
+  animation: stack_blow linear infinite 3s
+}
+
+.stack_hover1 .stack_arrow,
+.stack_hover4 .stack_arrow{
+  height: 33%;
+}
+.stack_hover2 .stack_arrow,
+.stack_hover3 .stack_arrow{
+  width: 33%;
+}
+
+@keyframes stack_blow{
+  0%{
+    opacity: 1;
+  }
+  50%{
+    opacity: 1;
+    fill: #0009;
+    scale: 1.3;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+
+@keyframes stack_ani1{
+  0%{
+    transform: translate(0%, -50%);
+  }
+
+  100%{
+    transform: translate(0%, 50%);
+  }
+}
+
+@keyframes stack_ani2{
+  0%{
+    transform: translate(-50%, 0%);
+  }
+
+  100%{
+    transform: translate(50%, 0%);
+  }
+}
+
+@keyframes stack_ani3{
+  0%{
+    transform: translate(50%, 0%);
+  }
+
+  100%{
+    transform: translate(-50%, 0%);
+  }
+}
+
+@keyframes stack_ani4{
+  0%{
+    transform: translate(0%, 50%);
+  }
+
+  100%{
+    transform: translate(0%, -50%);
+  }
+}
