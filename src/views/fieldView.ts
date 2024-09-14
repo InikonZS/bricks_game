@@ -5,9 +5,23 @@ export class FieldView extends Control{
     private colors:Array<string>;
     private fieldModel:Field;
     private cells: Array<Array<Control>>;
+  backField: Control<HTMLElement>;
   
     constructor (parentNode:HTMLElement, colors:Array<string>, fieldModel:Field){
-      super(parentNode, 'div', '');
+      super(parentNode, 'div', 'field_main_wrap');
+      this.backField = new Control(this.node, 'div', 'field_back');
+      for (let i = 0; i<fieldModel.width; i++){
+        const rowView = new Control(this.backField.node, 'div', 'row');
+        const row: Array<Control> = [];
+        for (let j = 0; j< fieldModel.height; j++){
+          let cell = new Control(rowView.node, 'div', 'cell cell__field');  
+          cell.node.style.backgroundColor = `var(--cellColorEmpty)`;
+          cell.node.textContent = '';
+          row.push(cell); 
+        }
+        //this.cells.push(row);
+      }
+
       this.fieldModel = fieldModel;
       this.colors = colors;
       this.cells = [];
@@ -30,7 +44,12 @@ export class FieldView extends Control{
   
       this.fieldModel.cells.forEach(cell=>{
         const cellView = this.cells[cell.position.y][cell.position.x];
-        
+        if (cell.isMoving && !cell.isStopped){
+          let amount = -100;
+          const dir = ['(0, 0)',  `(0, ${amount}%)`,`(${amount}%, 0)`, `(${-amount}%, 0)`, `(0, ${-amount}%)`][cell.direction];
+          //cellView.node.animate({transform: ["translate(0, 0)", "translate"+dir]}, 100);
+          cellView.node.animate({transform: ["translate"+dir, "translate(0, 0)"]}, 100);
+        }
         if (cell.isStopped){
           //const closestCells:Array<Control<HTMLElement>> = [];
           const radius = 3;

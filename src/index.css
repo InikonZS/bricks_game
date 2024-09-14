@@ -473,3 +473,12 @@ body{
     transform: translate(0%, -50%);
   }
 }
+
+.field_back{
+  position: absolute;
+  z-index: -1;
+}
+
+.field_main_wrap{
+  position: relative;
+}
