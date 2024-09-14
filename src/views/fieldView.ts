@@ -30,6 +30,36 @@ export class FieldView extends Control{
   
       this.fieldModel.cells.forEach(cell=>{
         const cellView = this.cells[cell.position.y][cell.position.x];
+        
+        if (cell.isStopped){
+          //const closestCells:Array<Control<HTMLElement>> = [];
+          const radius = 3;
+          for (let i=-radius; i<radius+1; i++){
+            for (let j=-radius; j<radius+1; j++){
+              const closeView = this.cells[i+cell.position.y]?.[j+cell.position.x];
+              const closeCell = this.fieldModel.getCell({x: j+cell.position.x, y: i+cell.position.y});
+              if (closeView && closeCell){
+                //closestCells.push(closeView);
+                let dist = Math.hypot(i, j)*1.5;
+                if (closeCell.position.x == cell.getNextPosition().x && closeCell.position.y == cell.getNextPosition().y){
+                  dist = 1;
+                }
+                if (closeCell == cell){
+                  dist = 1;
+                }
+                let amount = 10 / dist;
+                const dir = ['(0, 0)',  `(0, ${amount}px)`,`(${amount}px, 0)`, `(${-amount}px, 0)`, `(0, ${-amount}px)`][cell.direction];
+                amount = -5 / dist;
+                const dir2 = ['(0, 0)',  `(0, ${amount}px)`,`(${amount}px, 0)`, `(${-amount}px, 0)`, `(0, ${-amount}px)`][cell.direction];
+                closeView.node.animate({
+                  transform: ["translate(0, 0)", "translate"+dir, "translate(0, 0)", "translate"+dir2, "translate(0, 0)"],
+                  offset: [0, 0.25, 0.5, 0.75]
+                }, 200)
+              }
+            }
+          };
+          
+        }
         cellView.node.style.backgroundColor = `var(--cellColor${cell.color + 1})`//this.colors[cell.color];
         cellView.node.innerHTML = `<svg class="sw_wrapper sw_wrapper${cell.direction}" version="1.0" xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 100 100"

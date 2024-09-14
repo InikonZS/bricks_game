@@ -82,7 +82,9 @@ export class Game{
     const currentStack = this.stackList.stacks[stackIndex];
     if (this.field.isAvailableLine(currentStack.direction, currentStack.initialPosition)){
       this.moves++;
-      this.field.putCell(new Cell(currentStack.pop(), currentStack.direction, {...currentStack.initialPosition}));
+      const newCell = new Cell(currentStack.pop(), currentStack.direction, {...currentStack.initialPosition});
+      newCell.isMoving = true;
+      this.field.putCell(newCell);
     }
   }
 

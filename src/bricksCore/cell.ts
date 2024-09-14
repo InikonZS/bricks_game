@@ -4,6 +4,8 @@ import { IVector2 } from "./IVector2";
 export class Cell{
     private _direction: number;
     private _color: number;
+    public isMoving: boolean = false;
+    public isStopped: boolean = false;
     public position: IVector2;
   
     constructor (color:number, direction:number, position:IVector2){

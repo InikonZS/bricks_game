@@ -214,6 +214,7 @@ export class BricksView extends Control{
             }
         },
         onRemove:(figure:Array<IVector2>, color:number,combo:number)=>{
+          this.update();
           console.log('combo '+combo);
           if (combo>1){
             const comboView = new ComboView(this.removeLayer.node, combo);

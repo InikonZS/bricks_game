@@ -8,6 +8,7 @@ export class Field{
     public width: number;
     public height: number;
     public onReverted:(cell:Cell)=>void;
+    public onStopCell:(cell:Cell)=>void;
     public onRemove:(figure:Array<IVector2>, color: number)=>void;
     private breakFigureLength: number;
     colors: number;
@@ -105,8 +106,10 @@ export class Field{
       this.cells.forEach(cell=>{
         const nextPosition = cell.getNextPosition();
         const nextCell = this.getCell(nextPosition);//this.cells[this.getIndex(nextPosition.x, nextPosition.y)]
+        cell.isStopped = false;
         if ( nextCell == null ){
           if (this.isInsideField(nextPosition)){
+            cell.isMoving = true;
             cell.position = nextPosition;
           } else {
             this.revertCell(cell);
@@ -114,6 +117,12 @@ export class Field{
           }
           isChanged = true;
           //this.combo = 0;
+        } else {
+          if (cell.isMoving){
+            cell.isMoving = false;
+            cell.isStopped = true;
+            this.onStopCell?.(cell);
+          }
         }
       });
       const forRemove: IVector2[][] = [];
