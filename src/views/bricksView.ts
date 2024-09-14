@@ -243,7 +243,11 @@ export class BricksView extends Control{
     }
   
     public update(){
-      this.stakes.forEach(stake=>stake.update());
+      this.stakes.forEach((stake, i)=>{
+        const stackModel = this.game.stackList.stacks[i];
+        const isAvailable = !this.game.field.isAvailableLine(stackModel.direction, stackModel.initialPosition);
+        stake.update(isAvailable);
+      });
       this.fieldView.update();
     }
     

@@ -48,7 +48,12 @@ export class StackView extends Control{
       //this.update();
     }
   
-    public update(){
+    public update(isAvailable:boolean){
+      if (isAvailable){
+        this.node.style.pointerEvents = 'none';
+      } else {
+        this.node.style.pointerEvents = '';
+      }
       this.cellViews.forEach((cellView, index)=>{
         const direction = this.stackModel.direction
         const cellIndex = ( direction == 2 || direction == 1 ) ? index : this.stackModel.cells.length - 1 - index
