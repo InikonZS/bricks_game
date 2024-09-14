@@ -9,6 +9,7 @@ import { IVector2 } from '../bricksCore/IVector2';
 import { WinView } from '../views/winView'; 
 import { ScoreBlock } from './scoreBlock/scoreBlock';
 import { localize } from '../localization/localization';
+import { sound } from './sounds';
 
 export class BricksView extends Control{
     private colors = ['#f99', '#9f9', '#99f', '#f4f', '#df0', '#f90'];
@@ -188,6 +189,9 @@ export class BricksView extends Control{
       this.locked = true;
       const game = this.game;
       game.move(stackIndex);
+
+      sound.play('shot');
+
       this.scoreBlock.update({score:game.score, moves: game.moves});
       //game.processMove();
       let timer = 0;
@@ -214,6 +218,8 @@ export class BricksView extends Control{
             }
         },
         onRemove:(figure:Array<IVector2>, color:number,combo:number)=>{
+          sound.play('remove');
+          
           this.update();
           console.log('combo '+combo);
           if (combo>1){

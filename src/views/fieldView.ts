@@ -1,5 +1,7 @@
 import { Field } from '../bricksCore/field';
 import Control from '../control/control';
+import hitSound from '../assets/hit.mp3';
+import { sound } from './sounds';
 
 export class FieldView extends Control{
     private colors:Array<string>;
@@ -74,10 +76,11 @@ export class FieldView extends Control{
                   transform: ["translate(0, 0)", "translate"+dir, "translate(0, 0)", "translate"+dir2, "translate(0, 0)"],
                   offset: [0, 0.25, 0.5, 0.75]
                 }, 200)
+                
               }
             }
           };
-          
+          sound.play('hit');
         }
         cellView.node.style.backgroundColor = `var(--cellColor${cell.color + 1})`//this.colors[cell.color];
         cellView.node.innerHTML = `<svg class="sw_wrapper sw_wrapper${cell.direction}" version="1.0" xmlns="http://www.w3.org/2000/svg"
