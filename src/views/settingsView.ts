@@ -135,6 +135,14 @@ export class SettingsView extends Control{
       this.resize();
     }
 
+    validCountValue(){
+      return !Number.isNaN(this.count.node.valueAsNumber) && this.count.node.valueAsNumber >= 1 && this.count.node.valueAsNumber<=200 ? Math.floor(this.count.node.valueAsNumber) : 1;
+    }
+
+    validColorsValue(){
+      return !Number.isNaN(this.colors.node.valueAsNumber) && this.colors.node.valueAsNumber >= 2 && this.colors.node.valueAsNumber<=10 ? Math.floor(this.colors.node.valueAsNumber) : 2;
+    }
+
     resize(){
       const width = this.node.parentElement.clientWidth;//window.innerWidth;
       const height = this.node.parentElement.clientHeight//window.innerHeight;
@@ -157,20 +165,20 @@ export class SettingsView extends Control{
 
     refreshPreview(noGen?:boolean){
       let generator = generateSimpleTemplate;
-      if (this.count.node.valueAsNumber  % 2 ==0){
+      if (this.validCountValue()  % 2 ==0){
         generator = generateTemplate;
       }
-      if (this.count.node.valueAsNumber  % 4 ==0){
+      if (this.validCountValue()  % 4 ==0){
         generator = generateFourTemplate;
       }
       if (!noGen || !this.lastTemplate){
-        this.lastTemplate = generator(this.count.node.valueAsNumber);
+        this.lastTemplate = generator(this.validCountValue());
       }
       this.previewField.node.textContent ='';
       const cellSize = 300 / (this.lastTemplate.length + 6);
       this.previewField.node.style.setProperty('--cellSize', cellSize+'px');
       const data = {
-        colors: this.colors.node.valueAsNumber,
+        colors: this.validColorsValue(),
         width: this.sizeAuto.node.checked ? this.lastTemplate[0].length + 6 : this.sizeX.node.valueAsNumber,
         height: this.sizeAuto.node.checked ? this.lastTemplate.length + 6 : this.sizeY.node.valueAsNumber,
         template: this.lastTemplate
