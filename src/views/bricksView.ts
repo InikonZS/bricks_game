@@ -9,6 +9,7 @@ import { IVector2 } from '../bricksCore/IVector2';
 import { WinView } from '../views/winView'; 
 import { ScoreBlock } from './scoreBlock/scoreBlock';
 import { localize } from '../localization/localization';
+import { CorpLink } from './corpLink';
 import { sound } from './sounds';
 
 export class BricksView extends Control{
@@ -28,6 +29,7 @@ export class BricksView extends Control{
     soundVolume: Control<HTMLInputElement>;
   cornerSettings: Control<HTMLElement>;
   soundVolumeTitle: Control<HTMLElement>;
+  corpLink: CorpLink;
   
     constructor (parentNode: HTMLElement, game:Game){
       super(parentNode, 'div', 'bricks_wrapper');
@@ -65,9 +67,10 @@ export class BricksView extends Control{
 
       this.cornerSettings = new Control(gridZones[8].node, 'div', 'corner_settings');
 
-      this.soundVolumeTitle = new Control(this.cornerSettings.node, 'div', 'sound_volume_title', 'Volume');
+      const soundSetting = new Control(this.cornerSettings.node, 'div');
+      this.soundVolumeTitle = new Control(soundSetting.node, 'div', 'sound_volume_title', 'Volume');
 
-      this.soundVolume = new Control<HTMLInputElement>(this.cornerSettings.node, 'input', 'sound_volume');
+      this.soundVolume = new Control<HTMLInputElement>(soundSetting.node, 'input', 'sound_volume');
       this.soundVolume.node.type = 'range';
       this.soundVolume.node.min = '0';
       this.soundVolume.node.max = '1';
@@ -76,6 +79,8 @@ export class BricksView extends Control{
       this.soundVolume.node.oninput = ()=>{
         sound.volume = this.soundVolume.node.valueAsNumber;
       };
+
+      this.corpLink = new CorpLink(this.cornerSettings.node);
 
       this.menuBtn = new Control(gridZones[0].node, 'button', 'header_button', 'menu');
       this.menuBtn.node.onclick = ()=>{

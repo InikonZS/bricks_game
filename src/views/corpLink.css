@@ -1,0 +1,32 @@
+.corp_block{
+    font-size: calc(var(--cellSize)* 0.18);
+    font-family: Arial, Helvetica, sans-serif;
+    opacity: 1;
+    cursor: default;
+}
+
+.corp_site{
+    font-size: calc(var(--cellSize)* 0.225);
+}
+
+.corp_link{
+    display: flex;
+    align-items: baseline;
+}
+
+.demo_a {
+    padding: calc(var(--cellSize)* 0.01) calc(var(--cellSize)* 0.1);
+    padding-left: calc(var(--cellSize)* 0);
+    font-size: calc(var(--cellSize)* 0.33);
+    color: #ccf;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: calc(var(--cellSize)* 0.1);
+    font-family: Arial, Helvetica, sans-serif;
+    border-right: calc(var(--cellSize)* 0.1) dotted #334;
+}
+
+.demo_s{
+    color: #fff;
+}
