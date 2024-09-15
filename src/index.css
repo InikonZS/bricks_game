@@ -19,6 +19,7 @@ body{
   --cellColor11: #f00;
   --cellColor12: #00f;
   --cellColorEmpty: #333333;
+  --cellColorTransparent: transparent;
   --cellSize: 30px;
   background-color: #000;
   color: #fff;
