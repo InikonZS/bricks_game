@@ -212,9 +212,14 @@ export class BricksView extends Control{
      }
 
       if (this.node.clientHeight< 600){
-        this.node.classList.add('main_menu_low_h');
+        this.node.classList.add('pause_menu_low_h');
       } else {
-        this.node.classList.remove('main_menu_low_h');
+        this.node.classList.remove('pause_menu_low_h');
+      }
+      if (this.node.clientHeight< 400){
+        this.node.classList.add('pause_menu_super_low_h');
+      } else {
+        this.node.classList.remove('pause_menu_super_low_h');
       }
       this.node.style.setProperty('--mm-base-size', (this.node.clientHeight / 600) + 'px');
       //document.body.style.setProperty('--cellSize', size.toString()+'px');

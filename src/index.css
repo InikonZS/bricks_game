@@ -100,6 +100,7 @@ body{
   justify-content: center;
   height: 100vh;
   align-items: center;
+  overflow: hidden;
 }
 
 .gamefield{
@@ -352,7 +353,18 @@ body{
 }
 
 .main_menu{
+  padding: 5px;
   padding-bottom: 70px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+}
+
+.pause_menu{
+  padding: 10px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
 }
 
 .bricks_logo{
@@ -509,6 +521,14 @@ body{
 
 .main_menu_low_h {
   padding-bottom: 20px;
+}
+
+.pause_menu_low_h .option_button{
+  margin-bottom: calc((var(--mm-base-size) * 20));
+}
+
+.pause_menu_super_low_h .option_button{
+  height: calc((var(--mm-base-size) * 60));
 }
 
 .settings_wrapper .option_button{

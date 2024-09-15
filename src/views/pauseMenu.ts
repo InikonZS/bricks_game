@@ -9,7 +9,7 @@ export class PauseMenu extends Control{
     mainMenu: Control<HTMLElement>;
   
     constructor(parentNode:HTMLElement){
-      super(parentNode, 'div', 'settings_wrapper');
+      super(parentNode, 'div', 'pause_menu');
       this.continueButton = new Control(this.node, 'button', 'option_input option_button', 'continue');
       this.continueButton.node.onclick = ()=>{
         this.onSubmit('continue');

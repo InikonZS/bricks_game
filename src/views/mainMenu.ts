@@ -13,7 +13,7 @@ export class MainMenu extends Control{
   backAnimation: MainAnimation;
   
     constructor(parentNode:HTMLElement){
-      super(parentNode, 'div', 'settings_wrapper main_menu');
+      super(parentNode, 'div', 'main_menu');
       const logo = new Control(this.node, 'div', 'bricks_logo', 'Bricks');
 
       this.customGame = new Control(this.node, 'button', 'option_input option_button', 'custom game');
@@ -77,6 +77,11 @@ export class MainMenu extends Control{
         this.node.classList.add('main_menu_low_h');
       } else {
         this.node.classList.remove('main_menu_low_h');
+      }
+      if (height< 450){
+        this.node.classList.add('main_menu_super_low_h');
+      } else {
+        this.node.classList.remove('main_menu_super_low_h');
       }
       //this.node.style.setProperty('--mm-base-size-h', (size / w) + 'px');
       //this.node.style.setProperty('--mm-base-size-w', (size / w) + 'px');
