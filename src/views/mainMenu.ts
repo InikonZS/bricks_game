@@ -55,6 +55,31 @@ export class MainMenu extends Control{
       this.updateLocalize = this.updateLocalize.bind(this);
       localize.onChange.add(this.updateLocalize);
       this.updateLocalize();
+
+      window.onresize = ()=>{
+        this.resize();
+        requestAnimationFrame(()=> requestAnimationFrame(()=>{
+          this.resize();
+        }))
+      }
+      this.resize();
+    }
+
+    resize(){
+      const width = this.node.parentElement.clientWidth;//window.innerWidth;
+      const height = this.node.parentElement.clientHeight//window.innerHeight;
+      let w = 425;
+      let h = 605;
+      const aspect = h / w;
+      const size = Math.min(height / aspect, width);
+      this.node.style.setProperty('--mm-base-size', (size / w) + 'px');
+      if (height< h){
+        this.node.classList.add('main_menu_low_h');
+      } else {
+        this.node.classList.remove('main_menu_low_h');
+      }
+      //this.node.style.setProperty('--mm-base-size-h', (size / w) + 'px');
+      //this.node.style.setProperty('--mm-base-size-w', (size / w) + 'px');
     }
 
     updateLocalize(){

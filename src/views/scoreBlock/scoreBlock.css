@@ -1,3 +1,6 @@
 .score_block{
     padding: 10px;
+    padding: calc(var(--cellSize) / 2.5);
+    font-size: calc(var(--cellSize) / 2.5);
+    font-family: Arial, Helvetica, sans-serif;
 }

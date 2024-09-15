@@ -163,7 +163,7 @@ body{
 
 .header{
   flex-shrink: 0;
-  height: 40px;
+  height: calc(var(--cellSize));
 }
 
 .flw{
@@ -197,6 +197,7 @@ body{
   border-radius: 5px;
   padding: 5px 10px;
   padding-top: 10px;
+  margin-top: 10px;
 }
 
 .option_text{
@@ -261,6 +262,10 @@ body{
   color: #fff;
   width: 100%;
   height: 100%;
+  border: 1px solid #444;
+  border-radius: 3px;
+  font-size: calc(var(--cellSize) / 2.5);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .header_button:hover{
@@ -481,4 +486,59 @@ body{
 
 .field_main_wrap{
   position: relative;
+}
+
+.use_think .cell{
+  margin-left: -1px;
+  margin-top: -1px;
+  border-radius: 2px;
+}
+
+
+.main_menu_low_h .option_button{
+  height: calc((var(--mm-base-size) * 50));
+  margin-bottom: calc((var(--mm-base-size) * 20));
+}
+
+.main_menu_low_h .bricks_logo{
+  height:  calc((var(--mm-base-size) * 80));
+  font-size: calc((var(--mm-base-size) * 80));
+  margin-bottom: calc((var(--mm-base-size) * 30));
+}
+
+.main_menu_low_h {
+  padding-bottom: 20px;
+}
+
+.settings_wrapper .option_button{
+  height: 54px;
+}
+
+.settings_low_h .cell{
+  width: calc(var(--cellSize) / 1.2);
+  height: calc(var(--cellSize) /1.2);
+}
+
+.settings_low_h .option_button{
+  height: /*calc((var(--st-base-size) * 60));*/ 54px;
+  margin-bottom: calc((var(--st-base-size) * 10));
+}
+
+.settings_low_h .option_line{
+  margin-bottom: calc((var(--st-base-size) * 10));
+}
+
+.settings_low_h .option_field{
+  padding-bottom: calc((var(--st-base-size) * 10));
+}
+
+.settings_super_low_h .cell{
+  width: calc(var(--cellSize) / 1.4);
+  height: calc(var(--cellSize) /1.4);
+}
+
+.settings_super_low_h .option_button{
+  height: 34px;
+  font-size: 16px;
+  margin-bottom: calc((var(--st-base-size) * 10));
 }

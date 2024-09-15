@@ -126,8 +126,34 @@ export class SettingsView extends Control{
       this.updateLocalize = this.updateLocalize.bind(this);
       localize.onChange.add(this.updateLocalize);
       this.updateLocalize();
+      window.onresize = ()=>{
+        this.resize();
+        requestAnimationFrame(()=> requestAnimationFrame(()=>{
+          this.resize();
+        }))
+      }
+      this.resize();
     }
-  
+
+    resize(){
+      const width = this.node.parentElement.clientWidth;//window.innerWidth;
+      const height = this.node.parentElement.clientHeight//window.innerHeight;
+      let w = 425;
+      let h = 605;
+      const aspect = h / w;
+      const size = Math.min(height / aspect, width);
+      this.node.style.setProperty('--st-base-size', (size / w) + 'px');
+      if (height< h){
+        this.node.classList.add('settings_low_h');
+      } else {
+        this.node.classList.remove('settings_low_h');
+      }
+      if (height< 400){
+        this.node.classList.add('settings_super_low_h');
+      } else {
+        this.node.classList.remove('settings_super_low_h');
+      }
+    }
 
     refreshPreview(noGen?:boolean){
       let generator = generateSimpleTemplate;

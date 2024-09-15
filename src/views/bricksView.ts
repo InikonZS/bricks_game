@@ -179,7 +179,22 @@ export class BricksView extends Control{
       } else {
         parent.classList.remove('bricks_wrapper_h')
       }*/
+     const thinThreshold = 18;
+     if (size<thinThreshold){
+      this.node.classList.add('use_think');
+      document.body.style.setProperty('--cellSize', (size+1).toString()+'px');
+     } else {
+      this.node.classList.remove('use_think');
       document.body.style.setProperty('--cellSize', size.toString()+'px');
+     }
+
+      if (this.node.clientHeight< 600){
+        this.node.classList.add('main_menu_low_h');
+      } else {
+        this.node.classList.remove('main_menu_low_h');
+      }
+      this.node.style.setProperty('--mm-base-size', (this.node.clientHeight / 600) + 'px');
+      //document.body.style.setProperty('--cellSize', size.toString()+'px');
     }
   
     private handleMove(stackIndex:number){
@@ -219,7 +234,7 @@ export class BricksView extends Control{
         },
         onRemove:(figure:Array<IVector2>, color:number,combo:number)=>{
           sound.play('remove');
-          
+
           this.update();
           console.log('combo '+combo);
           if (combo>1){
