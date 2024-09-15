@@ -25,6 +25,9 @@ export class BricksView extends Control{
     combos: Array<ComboView> = [];
     scoreBlock: ScoreBlock;
     menuBtn: Control<HTMLElement>;
+    soundVolume: Control<HTMLInputElement>;
+  cornerSettings: Control<HTMLElement>;
+  soundVolumeTitle: Control<HTMLElement>;
   
     constructor (parentNode: HTMLElement, game:Game){
       super(parentNode, 'div', 'bricks_wrapper');
@@ -59,6 +62,20 @@ export class BricksView extends Control{
   
       this.scoreBlock = new ScoreBlock(gridZones[2].node);
       this.scoreBlock.update({score: game.score, moves: game.moves});
+
+      this.cornerSettings = new Control(gridZones[8].node, 'div', 'corner_settings');
+
+      this.soundVolumeTitle = new Control(this.cornerSettings.node, 'div', 'sound_volume_title', 'Volume');
+
+      this.soundVolume = new Control<HTMLInputElement>(this.cornerSettings.node, 'input', 'sound_volume');
+      this.soundVolume.node.type = 'range';
+      this.soundVolume.node.min = '0';
+      this.soundVolume.node.max = '1';
+      this.soundVolume.node.step = '0.01';
+      this.soundVolume.node.value = sound.volume.toString();
+      this.soundVolume.node.oninput = ()=>{
+        sound.volume = this.soundVolume.node.valueAsNumber;
+      };
 
       this.menuBtn = new Control(gridZones[0].node, 'button', 'header_button', 'menu');
       this.menuBtn.node.onclick = ()=>{
@@ -151,6 +168,7 @@ export class BricksView extends Control{
 
     updateLocalize() {
         this.menuBtn.node.textContent = localize.currentLang['menu'];
+        this.soundVolumeTitle.node.textContent = localize.currentLang['volume'];
     }
 
     destroy(): void {

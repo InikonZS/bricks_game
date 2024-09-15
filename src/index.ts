@@ -7,6 +7,7 @@ import { yandex } from './platforms/yandex';
 import { RulesView } from './views/rules/rules'; 
 import { Localization, localize } from './localization/localization';
 import './index.css';
+import './views/range.css';
 
 let disposeLocalize: ()=>void;
 

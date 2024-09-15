@@ -24,6 +24,7 @@ export const en = {
 
     score: 'Score',
     moves: 'Moves',
+    volume: 'Volume',
 
     close: 'Close',
     menu: 'Menu'

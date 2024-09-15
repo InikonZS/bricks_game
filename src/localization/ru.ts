@@ -24,6 +24,7 @@ export const ru = {
 
     score: 'Счет',
     moves: 'Ходы',
+    volume: 'Громкость',
 
     close: 'Закрыть',
     menu: 'Меню'
