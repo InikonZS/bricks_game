@@ -15,9 +15,9 @@ export function generateTemplate(count: number){
         }
         newField[item.y][item.x] = 1;
     }
-    console.log(newField);
+    //console.log(newField);
     const result = reflectField(newField);
-    console.log(result);
+    //console.log(result);
     return result;
 }
 
@@ -39,14 +39,14 @@ export function generateSimpleTemplate(count: number){
         }
         newField[item.y][item.x] = 1;
     }
-    console.log(newField);
+    //console.log(newField);
     return newField;
 }
 
 export function generateFourTemplate(count: number){
     const part = generateSimpleTemplate(Math.floor(count / 4));
     const result = reflectField4(part);
-    console.log(result);
+    //console.log(result);
     return result;
 }
 

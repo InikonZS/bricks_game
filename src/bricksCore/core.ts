@@ -118,7 +118,7 @@ export class Game{
       });
     } else {
       handlers.onStep(()=>{
-        console.log('finish')
+        //console.log('finish')
         this.combo = 0;
         handlers.onFinish();
       });

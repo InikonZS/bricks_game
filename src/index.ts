@@ -98,7 +98,7 @@ function startGame(){
       
     } else if (selected == 'rules'){
       //mainMenu.destroy();
-      console.log('rul')
+      //console.log('rul')
       const rulesView = new RulesView(root);
      // rulesView.
     }

@@ -31,7 +31,7 @@ export class HintView extends Control{
             const colorCell = new Control(this.colorsWrap.node, 'div', 'cell cell__field');
             colorCell.node.style.backgroundColor = `var(--cellColor${i + 1})`
             colorCell.node.onclick = ()=>{
-                console.log('select ', i);
+                //console.log('select ', i);
                 this.onSelect?.(i);
                 this.hide();
             }

@@ -73,7 +73,7 @@ export class Field{
           x: Math.floor(Math.random() * height)
         }
         if (getIndex(position.x, position.y) != -1){
-          console.log('wrong position')
+          //console.log('wrong position')
           continue;
         }
         let cell: ICellData = {
@@ -144,7 +144,7 @@ export class Field{
             //this.combo = 0;
           }
         });
-        console.log(forRemove);
+        //console.log(forRemove);
         forRemove.forEach(it=>{
           this.removeFigure(it);
         })

@@ -93,7 +93,7 @@ export class BricksView extends Control{
         menu.onSubmit = (result)=>{
           if (result == 'save'){
               const saveData = this.game.save();
-              console.log(saveData);
+              //console.log(saveData);
               localStorage.setItem('saved', JSON.stringify(saveData));
           } else if (result == 'menu'){
              this.onFinish('mainMenu');
@@ -260,7 +260,7 @@ export class BricksView extends Control{
         },
         onFinish:()=>{
             if (game.field.cells.length == 0){
-              console.log('win');
+              //console.log('win');
               const winView = new WinView(this.removeLayer.node);
               winView.onClose = ()=>{
                 this.onFinish?.('completed');
@@ -274,12 +274,12 @@ export class BricksView extends Control{
           sound.play('remove');
 
           this.update();
-          console.log('combo '+combo);
+          //console.log('combo '+combo);
           if (combo>1){
             const comboView = new ComboView(this.removeLayer.node, combo);
             this.combos.push(comboView);
             comboView.onClose =()=>{
-              console.log(this.combos.length);
+              //console.log(this.combos.length);
               this.combos.shift();
               const nextCombo = this.combos[0];
               if (nextCombo){
