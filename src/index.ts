@@ -12,8 +12,10 @@ import './views/range.css';
 let disposeLocalize: ()=>void;
 
 function startGame(){
-  document.body.oncontextmenu = (e)=>{
-    //e.preventDefault();
+  if (yandex.sdk){
+    document.body.oncontextmenu = (e)=>{
+      e.preventDefault();
+    }
   }
 
   const localizeHandler = ()=>{
