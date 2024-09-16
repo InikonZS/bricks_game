@@ -11,6 +11,7 @@ import { ScoreBlock } from './scoreBlock/scoreBlock';
 import { localize } from '../localization/localization';
 import { CorpLink } from './corpLink';
 import { sound } from './sounds';
+import { yandex } from '../platforms/yandex';
 
 export class BricksView extends Control{
     private colors = ['#f99', '#9f9', '#99f', '#f4f', '#df0', '#f90'];
@@ -80,7 +81,10 @@ export class BricksView extends Control{
         sound.volume = this.soundVolume.node.valueAsNumber;
       };
 
-      this.corpLink = new CorpLink(this.cornerSettings.node);
+      if (!yandex.sdk){
+        //No corp. link for ya-games
+        this.corpLink = new CorpLink(this.cornerSettings.node);
+      }
 
       this.menuBtn = new Control(gridZones[0].node, 'button', 'header_button', 'menu');
       this.menuBtn.node.onclick = ()=>{

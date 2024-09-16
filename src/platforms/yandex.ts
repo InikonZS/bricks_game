@@ -1,5 +1,17 @@
 class Yandex{
-    public sdk: any;
+    public sdk: {
+        adv: {
+            showRewardedVideo: (options: {
+                callbacks: {
+                    onOpen: () => void,
+                    onRewarded: () => void,
+                    onClose: () => void,
+                    onError: (e: any) => void
+                }
+            })=>void
+        },
+        [key:string]:any
+    };
     
     constructor(){
 

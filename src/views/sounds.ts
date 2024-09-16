@@ -10,9 +10,11 @@ const soundList = {
 
 class Sounds{
     volume: number;
+    cache: Partial<Record<keyof typeof soundList, HTMLAudioElement>> = {};
 
     constructor(){
         this.volume = 0.2;
+        this.preload();
     }
 
     play(name: keyof typeof soundList){
@@ -24,7 +26,11 @@ class Sounds{
     }
 
     preload(){
-
+        Object.keys(soundList).forEach((key: keyof typeof soundList)=>{
+            const newAudio = new Audio(soundList[key]);
+            newAudio.load();
+            this.cache[key] = newAudio;
+        });
     }
 }
 

@@ -12,6 +12,10 @@ import './views/range.css';
 let disposeLocalize: ()=>void;
 
 function startGame(){
+  document.body.oncontextmenu = (e)=>{
+    e.preventDefault();
+  }
+
   const localizeHandler = ()=>{
     console.log('translated main to '+localize.currentLangName);
   }

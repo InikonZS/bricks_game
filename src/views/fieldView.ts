@@ -41,6 +41,7 @@ export class FieldView extends Control{
     public update(){
       this.cells.forEach(it=>it.forEach(cellView=>{
         cellView.node.style.backgroundColor = `var(--cellColorEmpty)`;
+        cellView.node.style.zIndex = '0';
         cellView.node.textContent = '';
       }));
   
@@ -51,6 +52,7 @@ export class FieldView extends Control{
           const dir = ['(0, 0)',  `(0, ${amount}%)`,`(${amount}%, 0)`, `(${-amount}%, 0)`, `(0, ${-amount}%)`][cell.direction];
           //cellView.node.animate({transform: ["translate(0, 0)", "translate"+dir]}, 100);
           cellView.node.animate({transform: ["translate"+dir, "translate(0, 0)"]}, 100);
+          cellView.node.style.zIndex = '1';
         }
         if (cell.isStopped){
           //const closestCells:Array<Control<HTMLElement>> = [];
