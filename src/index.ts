@@ -1,4 +1,5 @@
 import { Game, IGameData} from './bricksCore/core';
+import './index.css';
 import { BricksView } from './views/bricksView';
 import { SettingsView } from './views/settingsView';
 import { MainMenu } from './views/mainMenu';
@@ -6,14 +7,13 @@ import { levelGenerators } from './bricksCore/levels';
 import { yandex } from './platforms/yandex';
 import { RulesView } from './views/rules/rules'; 
 import { Localization, localize } from './localization/localization';
-import './index.css';
 import './views/range.css';
 
 let disposeLocalize: ()=>void;
 
 function startGame(){
   document.body.oncontextmenu = (e)=>{
-    e.preventDefault();
+    //e.preventDefault();
   }
 
   const localizeHandler = ()=>{

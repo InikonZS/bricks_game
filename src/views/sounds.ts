@@ -10,7 +10,7 @@ const soundList = {
 
 class Sounds{
     volume: number;
-    cache: Partial<Record<keyof typeof soundList, HTMLAudioElement>> = {};
+    cache: Partial<Record<keyof typeof soundList, {blob: Blob, url: string}>> = {};
 
     constructor(){
         this.volume = 0.2;
@@ -19,17 +19,21 @@ class Sounds{
 
     play(name: keyof typeof soundList){
         if (this.volume!= 0){
-            const sound = new Audio(soundList[name]);
+            //const sound = new Audio(soundList[name]);
+            const sound = new Audio(this.cache[name]?.url || soundList[name]);
             sound.volume = this.volume;
             sound.oncanplay=()=>sound.play();
         }
     }
 
     preload(){
-        Object.keys(soundList).forEach((key: keyof typeof soundList)=>{
-            const newAudio = new Audio(soundList[key]);
-            newAudio.load();
-            this.cache[key] = newAudio;
+        Object.keys(soundList).forEach((key: keyof typeof soundList)=>{  
+            //const newAudio = new Audio(soundList[key]);
+            //newAudio.load();
+            fetch(soundList[key]).then(res=>res.blob()).then(blob=>{
+                this.cache[key] = {blob, url: URL.createObjectURL(blob)}
+            })
+            //this.cache[key] = //newAudio;
         });
     }
 }

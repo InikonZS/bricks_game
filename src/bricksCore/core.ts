@@ -88,6 +88,12 @@ export class Game{
     }
   }
 
+  //payed hint setColor handler, not a main mechanic
+  public setColor(color: number, position: IVector2){
+    const cell = this.field.getCell(position);
+    cell.setColor(color);
+  }
+
   /*public processMove(){
     for (let i=0; i<10000;i++){
       if (!this.field.processStep()){

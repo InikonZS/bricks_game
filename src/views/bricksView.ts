@@ -158,6 +158,10 @@ export class BricksView extends Control{
       });*/
   
       this.fieldView = new FieldView(gridZones[4].node, this.colors, game.field);
+      this.fieldView.onSetColor = (color, position)=>{
+        game.setColor(color, position);
+        this.handleMove();
+      };
       this.removeLayer = new Control(gridZones[4].node, 'div', 'remove_layer');
       this.update();
       this.resize();
@@ -229,15 +233,17 @@ export class BricksView extends Control{
       //document.body.style.setProperty('--cellSize', size.toString()+'px');
     }
   
-    private handleMove(stackIndex:number){
+    private handleMove(stackIndex?:number){
       if (this.locked){
         return;
       }
       this.locked = true;
       const game = this.game;
-      game.move(stackIndex);
 
-      sound.play('shot');
+      if (stackIndex != undefined){
+        game.move(stackIndex);
+        sound.play('shot');
+      }
 
       this.scoreBlock.update({score:game.score, moves: game.moves});
       //game.processMove();

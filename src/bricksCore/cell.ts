@@ -27,6 +27,10 @@ export class Cell{
     get color() {
       return this._color;
     }
+
+    setColor(color:number){
+      this._color = color;
+    }
   
     get direction(){
       return this._direction;

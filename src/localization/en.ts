@@ -27,5 +27,8 @@ export const en = {
     volume: 'Volume',
 
     close: 'Close',
-    menu: 'Menu'
+    menu: 'Menu',
+
+    hintChangeColorTitle: 'Change color?',
+    hintChangeColorDesc: 'You can change this block color for watch 1 advertising video. Pick color and watch adv. or click Close to continue game.'
 }

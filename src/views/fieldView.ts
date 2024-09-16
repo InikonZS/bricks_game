@@ -2,12 +2,17 @@ import { Field } from '../bricksCore/field';
 import Control from '../control/control';
 import hitSound from '../assets/hit.mp3';
 import { sound } from './sounds';
+import { HintView } from './hintView';
+import { IVector2 } from '../bricksCore/IVector2';
+import { yandex } from '../platforms/yandex';
 
 export class FieldView extends Control{
     private colors:Array<string>;
     private fieldModel:Field;
     private cells: Array<Array<Control>>;
   backField: Control<HTMLElement>;
+  hintView: HintView;
+    onSetColor: (color: number, position: IVector2)=>void;
   
     constructor (parentNode:HTMLElement, colors:Array<string>, fieldModel:Field){
       super(parentNode, 'div', 'field_main_wrap');
@@ -27,11 +32,52 @@ export class FieldView extends Control{
       this.fieldModel = fieldModel;
       this.colors = colors;
       this.cells = [];
+      this.hintView = new HintView(this.node, fieldModel.colors);
       for (let i = 0; i<fieldModel.width; i++){
         const rowView = new Control(this.node, 'div', 'row');
         const row: Array<Control> = [];
         for (let j = 0; j< fieldModel.height; j++){
-          let cell = new Control(rowView.node, 'div', 'cell cell__field');  
+          let cell = new Control(rowView.node, 'div', 'cell cell__field'); 
+          cell.node.onclick = ()=>{
+            const selectedCellModel = fieldModel.getCell({x: j, y: i});
+            if (selectedCellModel){
+              this.hintView.onSelect = (color)=>{
+                if (yandex.sdk){
+                  yandex.sdk?.adv.showRewardedVideo({callbacks: {
+                    onOpen: () => {
+                      console.log('Video ad open.');
+                    },
+                    onRewarded: () => {
+                      console.log('Rewarded!');
+                      cell.node.animate({
+                        transform: ["scale(1, 1)", "scale(1.1, 0.9)", "scale(0.9, 1.1)", "scale(1, 1)"],
+                        backgroundColor: [`var(--cellColor${selectedCellModel.color + 1})`, `var(--cellColor${selectedCellModel.color + 1})`, `var(--cellColor${color + 1})`, `var(--cellColor${color + 1})`]
+                      }, 500);
+                      setTimeout(()=>{
+                        this.onSetColor?.(color, {x: j, y: i});
+                      }, 500);
+                    },
+                    onClose: () => {
+                      console.log('Video ad closed.');
+                    },
+                    onError: (e) => {
+                      console.log('Error while open video ad:', e);
+                    }
+                  }});
+                } else {
+                  //local platform fallback
+                  cell.node.animate({
+                    transform: ["scale(1, 1)", "scale(1.1, 0.9)", "scale(0.9, 1.1)", "scale(1, 1)"],
+                    backgroundColor: [`var(--cellColor${selectedCellModel.color + 1})`, `var(--cellColor${selectedCellModel.color + 1})`, `var(--cellColor${color + 1})`, `var(--cellColor${color + 1})`]
+                  }, 500)
+                  setTimeout(()=>{
+                    this.onSetColor?.(color, {x: j, y: i});
+                  }, 500);
+                }
+              }
+              this.hintView.show();
+            }
+          } 
           row.push(cell); 
         }
         this.cells.push(row);
