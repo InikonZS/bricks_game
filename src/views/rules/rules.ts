@@ -13,7 +13,7 @@ export class RulesView extends Control {
         const contentContainer = new Control(center.node, 'div', 'rules_content_container scroll');
         contentContainer.node.innerHTML = {ru: contentTextsRu, en: contentTextsEn}[localize.currentLangName] + contentExamples;
         const buttonsContainer = new Control(center.node, 'div', 'rules_buttons');
-        const closeButton = new Control(buttonsContainer.node, 'button', 'option_button rules_close', 'close');
+        const closeButton = new Control(buttonsContainer.node, 'button', 'option_button rules_close', localize.currentLang['close']);
         closeButton.node.onclick = ()=>{
             this.close();
         }
