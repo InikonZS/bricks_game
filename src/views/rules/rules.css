@@ -16,10 +16,18 @@
     padding: 10px;
     padding-bottom: 10px;
     border-radius: 10px;
+
+    height: 100%;
+    max-height: 500px;
+    overflow: hidden;
 }
 
 .rules_content_container{
-
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 45px);
 }
 
 .rules_close{
@@ -74,4 +82,28 @@
 .rules_buttons{
     display: flex;
     justify-content: center;
+
+    padding-top: 5px;
+    position: relative;
+    /*box-shadow: #000 0px -5px 10px;*/
+}
+
+.scroll::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #232323;
+}
+
+.scroll::-webkit-scrollbar
+{
+	width: 8px;
+	background-color: #000000;
+}
+
+.scroll::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #565656;
 }

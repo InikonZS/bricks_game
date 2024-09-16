@@ -10,7 +10,7 @@ export class RulesView extends Control {
     constructor(parentNode: HTMLElement) {
         super(parentNode, 'div', 'rules_view');
         const center = new Control(this.node, 'div', 'rules_center');
-        const contentContainer = new Control(center.node, 'div', 'rules_content_container');
+        const contentContainer = new Control(center.node, 'div', 'rules_content_container scroll');
         contentContainer.node.innerHTML = {ru: contentTextsRu, en: contentTextsEn}[localize.currentLangName] + contentExamples;
         const buttonsContainer = new Control(center.node, 'div', 'rules_buttons');
         const closeButton = new Control(buttonsContainer.node, 'button', 'option_button rules_close', 'close');
