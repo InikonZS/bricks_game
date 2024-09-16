@@ -37,7 +37,7 @@ export class HintView extends Control{
             }
         }
 
-        this.closeButton = new Control(this.hintPopup.node, 'button', 'option_button hint_popup_close', 'Close');
+        this.closeButton = new Control(this.hintPopup.node, 'button', 'option_button hint_popup_close', localize.currentLang['close']);
         this.closeButton.node.onclick = ()=>{
             this.hide();
             this.onClose?.();

@@ -10,8 +10,9 @@ export class FieldView extends Control{
     private colors:Array<string>;
     private fieldModel:Field;
     private cells: Array<Array<Control>>;
-  backField: Control<HTMLElement>;
-  hintView: HintView;
+    backField: Control<HTMLElement>;
+    hintView: HintView;
+    allowHint: boolean = false; //flag to use monetization for change cell color
     onSetColor: (color: number, position: IVector2)=>void;
   
     constructor (parentNode:HTMLElement, colors:Array<string>, fieldModel:Field){
@@ -39,6 +40,9 @@ export class FieldView extends Control{
         for (let j = 0; j< fieldModel.height; j++){
           let cell = new Control(rowView.node, 'div', 'cell cell__field'); 
           cell.node.onclick = ()=>{
+            if (!this.allowHint){
+              return;
+            }
             const selectedCellModel = fieldModel.getCell({x: j, y: i});
             if (selectedCellModel){
               this.hintView.onSelect = (color)=>{
