@@ -10,7 +10,7 @@ const soundList = {
 
 class Sounds{
     volume: number;
-    cache: Partial<Record<keyof typeof soundList, {blob: Blob, url: string}>> = {};
+    cache: Partial<Record<keyof typeof soundList, {blob: Blob, url: string, audio: HTMLAudioElement}>> = {};
 
     constructor(){
         this.volume = 0.2;
@@ -31,7 +31,12 @@ class Sounds{
             //const newAudio = new Audio(soundList[key]);
             //newAudio.load();
             fetch(soundList[key]).then(res=>res.blob()).then(blob=>{
-                this.cache[key] = {blob, url: URL.createObjectURL(blob)}
+                const url = URL.createObjectURL(blob);
+                const audio = document.createElement('audio');
+                audio.src = url;
+                audio.load();
+                document.body.append(audio);
+                this.cache[key] = {blob, url, audio}
             })
             //this.cache[key] = //newAudio;
         });
